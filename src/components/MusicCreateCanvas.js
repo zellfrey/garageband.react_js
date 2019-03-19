@@ -186,7 +186,6 @@ export default class MusicCreateCanvas extends React.Component{
         let clickedRect = this.state.clickedRectangle
         if(clickedRect){
             this.onGridSnap(clickedRect)
-            console.log(clickedRect)
             return this.setState({clickedRectangle: null})
         }
     }

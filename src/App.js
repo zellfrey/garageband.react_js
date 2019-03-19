@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, withRouter } from 'react-router-dom';
 import NavBar from './components/NavBar'
 import Home from './components/Home'
 import MusicCreateCanvas from './components/MusicCreateCanvas'
@@ -10,14 +10,14 @@ const projectsURL = 'http://localhost:3000/api/v1/projects'
 const rectanglesURL = 'http://localhost:3000/api/v1/rectangles'
 const usersURL = 'http://localhost:3000/api/v1/users'
 
-export default class App extends Component {
+class App extends Component {
   constructor(){
     super();
     this.state={
-      notes: null,
+      notes: [],
       projects: [],
-      rectangles: null,
-      users: null
+      rectangles: [],
+      users: []
     }
   }
 
@@ -42,11 +42,16 @@ export default class App extends Component {
   }
 
 
-  deleteProjectFetch = (e) =>{
-    console.log(e.target.id)
+  onHandleDeleteProject = (e) =>{
+    const id = parseInt(e.target.id)
+    const selectedProj = this.state.projects.find(proj =>proj.id === id)
+    debugger
+    selectedProj.rectangles.map(rect => this.deleteRectangleFetch(rect.id))
     return fetch(`http://localhost:3000/api/v1/projects/${e.target.id}`,
       {method:'Delete'}).then(resp => resp.json())
-      .then(resp => console.log(resp))
+      .then(resp => {
+        this.setState({projects: this.state.projects.filter(proj => {return proj.id !== resp.id})})
+    })
   }
 
   //Rectangle CRUD server fetch requests
@@ -55,39 +60,44 @@ export default class App extends Component {
       rect.project_id = proj_id
       this.newRectangleFetch(rect);  
     }
+    this.props.history.push('/');
   }
   newRectangleFetch = (rectangle)=>{
     return fetch(rectanglesURL,{
       method:'Post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(rectangle)
-    }).then(resp => resp.json()).then(rects => console.log(rects))
+    }).then(resp => resp.json()).then(rect => this.setState({rectangles: this.state.rectangles.concat(rect)}));
   }
 
+  deleteRectangleFetch = (rectID) =>{
+    return fetch(`http://localhost:3000/api/v1/rectangles/${rectID}`,
+      {method:'Delete'}).then(resp => resp.json())
+      .then(resp => console.log(resp))
+  }
 
 
   render() {
     return (
-      <Router>
-        <div className="App">
-        <NavBar/>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/create"  render={
-          routerProps => <MusicCreateCanvas {...routerProps} 
-          notes={this.state.notes} 
-          newProjectFetch={this.newProjectFetch}
-          createEachRectangle={this.createEachRectangle}
-            />
-          }/>
-        <Route exact path="/collection" render={
-          routerProps => <Collection {...routerProps}
-          projects={this.state.projects}
-          deleteProjectFetch={this.deleteProjectFetch}
-            />
-          } />
-        </div>
-      </Router>
+      <div className="App">
+      <NavBar/>
+      <Route exact path="/" component={Home} />
+      <Route exact path="/create"  render={
+        routerProps => <MusicCreateCanvas {...routerProps} 
+        notes={this.state.notes} 
+        newProjectFetch={this.newProjectFetch}
+        createEachRectangle={this.createEachRectangle}
+          />
+        }/>
+      <Route exact path="/collection" render={
+        routerProps => <Collection {...routerProps}
+        projects={this.state.projects}
+        onHandleDeleteProject={this.onHandleDeleteProject}
+          />
+        } />
+      </div>
     );
   }
 }
 
+export default withRouter(App);
