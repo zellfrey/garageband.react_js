@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import NavBar from './components/NavBar'
 import Home from './components/Home'
-import MusicCanvas from './components/MusicCanvas'
+import MusicCreateCanvas from './components/MusicCreateCanvas'
 import Collection from './components/Collection'
 
 const notesURL = 'http://localhost:3000/api/v1/notes'
@@ -65,7 +65,7 @@ export default class App extends Component {
         <NavBar/>
         <Route exact path="/" component={Home} />
         <Route exact path="/create"  render={
-          routerProps => <MusicCanvas {...routerProps} 
+          routerProps => <MusicCreateCanvas {...routerProps} 
           notes={this.state.notes} 
           newProjectFetch={this.newProjectFetch}
           createEachRectangle={this.createEachRectangle}/>

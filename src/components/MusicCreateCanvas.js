@@ -1,7 +1,7 @@
 import React from 'react';
 import {bpmBar} from '../dummyData';
 
-export default class MusicCanvas extends React.Component{
+export default class MusicCreateCanvas extends React.Component{
 
     constructor(props){
         super(props);
