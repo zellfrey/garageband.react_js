@@ -29,6 +29,7 @@ export default class App extends Component {
     fetch(usersURL).then(resp => resp.json()).then(people => this.setState({users: people}))
   }
 
+  //Project CRUD server fetch requests
   newProjectFetch =(name, img, desc, w, h, aON, rectangles) =>{
     const newProject = { user_id: 1, name: name, image: img, description: desc, width: w,height: h, amount_of_notes: aON}
     return fetch(projectsURL,{
@@ -41,13 +42,20 @@ export default class App extends Component {
   }
 
 
+  deleteProjectFetch = (e) =>{
+    console.log(e.target.id)
+    return fetch(`http://localhost:3000/api/v1/projects/${e.target.id}`,
+      {method:'Delete'}).then(resp => resp.json())
+      .then(resp => console.log(resp))
+  }
+
+  //Rectangle CRUD server fetch requests
   createEachRectangle = (rectangle, proj_id)=>{
     for(const rect of rectangle){
       rect.project_id = proj_id
       this.newRectangleFetch(rect);  
     }
   }
-
   newRectangleFetch = (rectangle)=>{
     return fetch(rectanglesURL,{
       method:'Post',
@@ -68,9 +76,15 @@ export default class App extends Component {
           routerProps => <MusicCreateCanvas {...routerProps} 
           notes={this.state.notes} 
           newProjectFetch={this.newProjectFetch}
-          createEachRectangle={this.createEachRectangle}/>
+          createEachRectangle={this.createEachRectangle}
+            />
           }/>
-        <Route exact path="/collection" render={routerProps => <Collection {...routerProps} projects={this.state.projects}/>} />
+        <Route exact path="/collection" render={
+          routerProps => <Collection {...routerProps}
+          projects={this.state.projects}
+          deleteProjectFetch={this.deleteProjectFetch}
+            />
+          } />
         </div>
       </Router>
     );
