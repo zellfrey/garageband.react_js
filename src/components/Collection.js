@@ -23,7 +23,7 @@ export default class Collection extends React.Component{
             <CollectionSearchBar filterSelectOption={this.state.filterSelectOption} onFilterSelectChange={this.onFilterSelectChange}/>
             <div className= 'CanvasList'>
             {
-            this.state.projects.map((project, idx)=>{return <CanvasCard key={idx} project={project}/>})
+            this.state.projects.map((project, idx)=>{return <CanvasCard key={idx} project={project} deleteProjectFetch={this.props.deleteProjectFetch}/>})
             }
             </div>
         </div>
