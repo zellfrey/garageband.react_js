@@ -1,5 +1,7 @@
 import React from 'react';
 import {bpmBar} from '../dummyData';
+import CanvasCreateSubmit from './CanvasCreateSubmit';
+import '../CanvasSubmit.css'
 
 export default class MusicCreateCanvas extends React.Component{
 
@@ -13,7 +15,8 @@ export default class MusicCreateCanvas extends React.Component{
             clickedRectangle: null,
             bpm: 300,
             soundVolume: 50,
-            play: false
+            play: false,
+            showSubmitModal: false
         }
     }
 
@@ -22,18 +25,24 @@ export default class MusicCreateCanvas extends React.Component{
         this.drawCanvas()
     }
 
+    handleSubmitClose = () =>{
+        this.setState({showSubmitModal: false})
+    }
+
     //button functions
     onChangeBPMSlider = (e) =>{this.setState({bpm: e.target.value})}
 
     onPlay = () =>{
-        this.setState({play: true})
-        const rectangles  = this.state.rectangles
-        this.playBpmBar()
-        return (rectangles ? rectangles.map(rect => this.onGridSnap(rect)) : null)
+        if(!this.state.showSubmitModal){
+            this.setState({play: true})
+            const rectangles  = this.state.rectangles
+            this.playBpmBar()
+            return (rectangles ? rectangles.map(rect => this.onGridSnap(rect)) : null)
+        }     
     }
 
     onAdd = () =>{
-        if(!this.state.play){
+        if(!this.state.play && !this.state.showSubmitModal){
             const newRectangle ={posX: 200, posY: 100, width: 50, height: 50}
             this.setState({rectangles: this.state.rectangles.concat(newRectangle)})
             this.drawRectangle(200,100,50, 50)
@@ -44,10 +53,14 @@ export default class MusicCreateCanvas extends React.Component{
     onChangeVolumeSlider = (e) =>{this.setState({soundVolume: e.target.value})}
 
     onSaveProject = () =>{
+        this.setState({showSubmitModal: true}) 
+    }
+
+    onProjectSave = (name, desc) =>{
         this.state.rectangles.map(rect => this.onGridSnap(rect))
         const canvas = this.MusicCanvas.current
         const rectList = this.state.rectangles
-        return this.props.newProjectFetch("test", "8k imaging", "", canvas.width, canvas.height, this.state.notes.length, rectList)
+        return this.props.newProjectFetch(name, desc, "", canvas.width, canvas.height, this.state.notes.length, rectList)
     }
 
     drawBpmBar = () =>{
@@ -90,7 +103,7 @@ export default class MusicCreateCanvas extends React.Component{
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         this.drawGrid()
-        return (rectangles ? rectangles.map(rect => {this.drawRectangle(rect.posX, rect.posY, rect.width, rect.height)}) : null)
+    return (rectangles ? rectangles.map(rect => {this.drawRectangle(rect.posX, rect.posY, rect.width, rect.height)}) : null)
     }
 
     drawGrid = () =>{
@@ -192,18 +205,24 @@ export default class MusicCreateCanvas extends React.Component{
 
     render (){
         return(
-        <div>
+        <div className={this.state.showSubmitModal ? "modal" : "good"}>
         <h3>MusicCanvas</h3>
             <div>
                 <canvas ref={this.MusicCanvas} id="music" width="1200" height="400"  style ={{background: '#303942'}}
                 onMouseDown={this.dragRectangleStart} onMouseMove={this.dragRectangle} onMouseUp={this.dragRectangleEnd}></canvas>
             </div>
-            <div>
                 <input type="range" id="bpm range" min="100" max="400" value={this.state.bpm} onChange={this.onChangeBPMSlider}></input>
                 <button id="play" onClick={this.onPlay} >play</button>
                 <button id="add" onClick={this.onAdd} >add</button>
                 <input type="range" id="volume" min="0" max="100" value={this.state.soundVolume} onChange={this.onChangeVolumeSlider}></input>
                 <button id="save" onClick={this.onSaveProject} >save</button>
+            <div>
+                <CanvasCreateSubmit 
+                    show={this.state.showSubmitModal} 
+                    rectangles={this.state.rectangles}
+                    onProjectSave={this.onProjectSave}
+                    handleSubmitClose={this.handleSubmitClose}
+                    />
             </div>
         </div>
         )
