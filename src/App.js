@@ -50,6 +50,7 @@ class App extends Component {
     return fetch(`http://localhost:3000/api/v1/projects/${e.target.id}`,
       {method:'Delete'}).then(resp => resp.json())
       .then(resp => {
+        console.log(resp)
         this.setState({projects: this.state.projects.filter(proj => {return proj.id !== resp.id})})
     })
   }
@@ -73,7 +74,6 @@ class App extends Component {
   deleteRectangleFetch = (rectID) =>{
     return fetch(`http://localhost:3000/api/v1/rectangles/${rectID}`,
       {method:'Delete'}).then(resp => resp.json())
-      .then(resp => console.log(resp))
   }
 
 

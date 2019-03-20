@@ -1,6 +1,6 @@
 import React from 'react';
 import CollectionSearchBar from '../components/CollectionSearchBar'
-import CanvasCard from './CanvasCard';
+import ProjectCard from './ProjectCard';
 
 export default class Collection extends React.Component{
 
@@ -9,6 +9,12 @@ export default class Collection extends React.Component{
         this.state={
             filterSelectOption: "All",
             projects: this.props.projects
+        }
+    }
+
+    componentDidUpdate(prevProps){
+        if(prevProps.projects !== this.props.projects){
+            this.setState({projects: this.props.projects})
         }
     }
 
@@ -23,7 +29,7 @@ export default class Collection extends React.Component{
             <CollectionSearchBar filterSelectOption={this.state.filterSelectOption} onFilterSelectChange={this.onFilterSelectChange}/>
             <div className= 'CanvasList'>
             {
-            this.state.projects.map((project, idx)=>{return <CanvasCard key={idx} project={project} onHandleDeleteProject={this.props.onHandleDeleteProject}/>})
+            this.state.projects.map((project, idx)=>{return <ProjectCard key={idx} project={project} onHandleDeleteProject={this.props.onHandleDeleteProject}/>})
             }
             </div>
         </div>

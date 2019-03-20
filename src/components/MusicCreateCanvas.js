@@ -26,13 +26,6 @@ export default class MusicCreateCanvas extends React.Component{
         this.drawCanvas()
     }
 
-    componentDidUpdate(prevProps){
-        if(prevProps.notes !== this.props.notes){
-            this.setState({notes: this.props.notes})
-            this.drawCanvas()
-        }
-    }
-
     handleSubmitClose = () =>{
         this.setState({showSubmitModal: false})
     }
