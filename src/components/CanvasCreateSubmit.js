@@ -32,8 +32,12 @@ export default class CanvasCreateSubmit extends React.Component{
         const name = this.state.projectName
         const description = this.state.projectDesc
         e.preventDefault()
-        if((name.length || description.length) === 0 ){
-            window.confirm("You cannot save without a title or description");
+        if(name.length <= 3){
+            window.confirm("You cannot save without a title");
+            return null
+        }
+        if(description.length <= 5){
+            window.confirm("You cannot save without a description");
             return null
         }
         if(this.state.rectangles.length === 0){
@@ -44,10 +48,18 @@ export default class CanvasCreateSubmit extends React.Component{
             }
             else{
                 console.log("cancel submit")
-                return this.props.handleSubmitClose()
+                return this.handleCleanUp()
             }
         }
         return this.props.onProjectSave(name, description)
+    }
+
+    handleCleanUp = () =>{
+        this.setState({
+            projectName: "",
+            projectDesc: ""
+        })
+        return this.props.handleSubmitClose()
     }
 
     render(){
@@ -61,7 +73,7 @@ export default class CanvasCreateSubmit extends React.Component{
                         value={this.state.projectDesc} 
                         onChange={this.handleDescriptionChange}/>
                     <input type="submit" value="Save" />
-                <button onClick={this.props.handleSubmitClose}>Cancel</button>
+                <button onClick={this.handleCleanUp}>Cancel</button>
                 </form>
             </div> : null
         )
