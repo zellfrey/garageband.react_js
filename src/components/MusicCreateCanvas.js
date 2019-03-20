@@ -1,6 +1,7 @@
 import React from 'react';
 import {bpmBar} from '../dummyData';
 import CanvasCreateSubmit from './CanvasCreateSubmit';
+import { BrowserRouter as Link } from "react-router-dom";
 import '../CanvasSubmit.css'
 
 export default class MusicCreateCanvas extends React.Component{
@@ -23,6 +24,13 @@ export default class MusicCreateCanvas extends React.Component{
     
     componentDidMount(){
         this.drawCanvas()
+    }
+
+    componentDidUpdate(prevProps){
+        if(prevProps.notes !== this.props.notes){
+            this.setState({notes: this.props.notes})
+            this.drawCanvas()
+        }
     }
 
     handleSubmitClose = () =>{
