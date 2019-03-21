@@ -92,6 +92,7 @@ class App extends Component {
       <Route exact path="/collection" render={
         routerProps => <Collection {...routerProps}
         projects={this.state.projects}
+        notes={this.state.notes}
         onHandleDeleteProject={this.onHandleDeleteProject}
           />
         } />
