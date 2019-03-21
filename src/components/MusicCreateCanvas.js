@@ -4,6 +4,12 @@ import CanvasCreateSubmit from './CanvasCreateSubmit';
 import { BrowserRouter as Link } from "react-router-dom";
 import '../CanvasSubmit.css'
 
+
+const audioContext = new window.AudioContext()
+var frameTime;     
+var lastFrameTime= new Date().valueOf;;  
+var eventTime;      
+var timeInterval = 1000;
 export default class MusicCreateCanvas extends React.Component{
 
     constructor(props){
@@ -15,11 +21,12 @@ export default class MusicCreateCanvas extends React.Component{
             notes: this.props.notes,
             clickedRectangle: null,
             bpm: 300,
-            soundVolume: 50,
+            soundVolume: 0.5,
             play: false,
-            showSubmitModal: false
+            showSubmitModal: false,
         }
     }
+
 
     
     componentDidMount(){
@@ -37,21 +44,27 @@ export default class MusicCreateCanvas extends React.Component{
         if(!this.state.showSubmitModal){
             this.setState({play: true})
             const rectangles  = this.state.rectangles
-            this.playBpmBar()
+            this.playBpmBar(new Date().valueOf())
+             
             return (rectangles ? rectangles.map(rect => this.onGridSnap(rect)) : null)
         }     
     }
 
     onAdd = () =>{
         if(!this.state.play && !this.state.showSubmitModal){
+
             const newRectangle ={posX: 200, posY: 100, width: 50, height: 50}
             this.setState({rectangles: this.state.rectangles.concat(newRectangle)})
             this.drawRectangle(200,100,50, 50)
         }
     }
 
+    
 
-    onChangeVolumeSlider = (e) =>{this.setState({soundVolume: e.target.value})}
+
+    onChangeVolumeSlider = (e) =>{
+        console.log(e.target.value)
+        return this.setState({soundVolume: e.target.value})}
 
     onSaveProject = () =>{
         this.setState({showSubmitModal: true}) 
@@ -74,27 +87,46 @@ export default class MusicCreateCanvas extends React.Component{
         ctx.stroke()
     }
     
-    playBpmBar =() => {
+    playBpmBar =(time) => {
+        frameTime = time - lastFrameTime
         const canvas = this.MusicCanvas.current
         const rectangles = this.state.rectangles
+        let timeSinceEvent = time-eventTime; // get the time since the event started
+        let timeSinceLastSync = timeSinceEvent % timeInterval;
         bpmBar.posX += this.state.bpm / 120
         if(bpmBar.posX > canvas.width){
             bpmBar.posX = 0
             cancelAnimationFrame(this.playBpmBar)
             this.setState({play: false})
+            lastFrameTime = time
             return null
         }else{
             this.drawCanvas()
             this.drawBpmBar()
             requestAnimationFrame(this.playBpmBar)
-            return(rectangles ? rectangles.map(rect => this.onRectangleAndBPMCollision(rect.posX, rect.width, rect.note_id)) : null)
+            lastFrameTime = time;
         }
+        rectangles.map(rect => this.onRectangleAndBPMCollision(rect, frameTime, timeSinceEvent ))
     }
 
-    onRectangleAndBPMCollision = (x, width, note_id) => {
-        if(bpmBar.posX >= x  && bpmBar.posX <= x + width){
-            console.log(note_id)
-        }
+    onRectangleAndBPMCollision = (rect, frameTime, timeSinceEvent) => {
+        if(bpmBar.posX >= rect.posX  && bpmBar.posX <= rect.posX + rect.width){ 
+            const note = this.state.notes.find(note =>note.id === rect.note_id)
+            this.playSound(note.freq, audioContext, frameTime)       
+        }   
+    }
+
+    playSound = (freq, audio, frameTime) =>{
+        const masterGainNode = audio.createGain();
+        masterGainNode.connect(audio.destination);
+        masterGainNode.gain.value = this.state.soundVolume;
+        const osc = audio.createOscillator();
+        osc.connect(masterGainNode);
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        osc.start();
+        eventTime = new Date().valueOf()
+        osc.stop(audio.currentTime + 0.16)
     }
 
     drawCanvas = () =>{
@@ -104,7 +136,7 @@ export default class MusicCreateCanvas extends React.Component{
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         this.drawGrid()
-    return (rectangles ? rectangles.map(rect => {this.drawRectangle(rect.posX, rect.posY, rect.width, rect.height)}) : null)
+    return rectangles.map(rect => {this.drawRectangle(rect.posX, rect.posY, rect.width, rect.height)})
     }
 
     drawGrid = () =>{
@@ -112,12 +144,12 @@ export default class MusicCreateCanvas extends React.Component{
         const ctx = this.MusicCanvas.current.getContext('2d')
         let yIntersectArray = []
         ctx.beginPath()
-        let j = 0
+        let noteID = 1
             for(let i = 0; i < canvas.height; i+=(canvas.height/this.state.notes.length)){
-                yIntersectArray.push({yValue: i, note_id: j})
+                yIntersectArray.push({yValue: i, note_id: noteID})
                 ctx.moveTo(0, i)
                 ctx.lineTo(canvas.width, i)
-                j ++
+                noteID ++
             }
         ctx.strokeStyle = 'grey' 
         ctx.stroke()
@@ -126,7 +158,7 @@ export default class MusicCreateCanvas extends React.Component{
 
     drawRectangle = (x,y,width, height) =>{
         const ctx = this.MusicCanvas.current.getContext('2d')
-        ctx.fillStyle = 'LightSeaGreen';
+        ctx.fillStyle = `rgb(32,178,${y})`;
         ctx.fillRect(x, y, width, height);
     }
 
@@ -215,7 +247,7 @@ export default class MusicCreateCanvas extends React.Component{
                 <input type="range" id="bpm range" min="100" max="400" value={this.state.bpm} onChange={this.onChangeBPMSlider}></input>
                 <button id="play" onClick={this.onPlay} >play</button>
                 <button id="add" onClick={this.onAdd} >add</button>
-                <input type="range" id="volume" min="0" max="100" value={this.state.soundVolume} onChange={this.onChangeVolumeSlider}></input>
+                <input type="range" id="volume" min="0.0" max="1.0" step="0.01" value={this.state.soundVolume} onChange={this.onChangeVolumeSlider}></input>
                 <button id="save" onClick={this.onSaveProject} >save</button>
             <div>
                 <CanvasCreateSubmit 
@@ -229,3 +261,25 @@ export default class MusicCreateCanvas extends React.Component{
         )
     }
 }
+
+// 1553121286524
+// 1553121286539
+// 1553121286555
+// 1553121286573
+// 1553121286589
+// 1553121286606
+// 1553121286625
+// 1553121286640
+// 1553121286657
+// 1553121286674
+// 1553121286689
+// 1553121286705
+// 1553121286722
+// 1553121286741
+// 1553121286757
+// 1553121286774
+// 1553121286791
+// 1553121286807
+// 1553121286824
+// 1553121286840
+// 1553121286856
