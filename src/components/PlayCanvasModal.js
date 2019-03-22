@@ -4,10 +4,6 @@ import '../PlayCanvasModal.css'
 
 
 const audioContext = new window.AudioContext()
-var frameTime;     
-var lastFrameTime= new Date().valueOf;;  
-var eventTime;      
-var timeInterval = 1000;
 export default class PlayCanvasModal extends React.Component{
     
     constructor(props){
@@ -20,7 +16,8 @@ export default class PlayCanvasModal extends React.Component{
             notes: this.props.notes,
             soundVolume: 0.5,
             gridYNoteBoundariesArray: [],
-            bpm: 300,
+            gridXTempoBoundiesArray: [],
+            tempo: 120,
         }
     }
 
@@ -34,7 +31,11 @@ export default class PlayCanvasModal extends React.Component{
             this.drawCanvas()
         }
     }
-    onChangeBPMSlider = (e) =>{this.setState({bpm: e.target.value})}
+    onChangeBPMSlider = (e) =>{
+        console.log(e.target.value)
+        this.setState({tempo: e.target.value})
+        return this.drawCanvas()
+    }
 
     onPlay = () =>{
             const rectangles  = this.state.rectangles
@@ -66,36 +67,34 @@ export default class PlayCanvasModal extends React.Component{
         ctx.stroke()
     }
     
-    playBpmBar =(time) => {
-        frameTime = time - lastFrameTime
+    playBpmBar =() => {
         const canvas = this.MusicCanvas.current
         const rectangles = this.state.rectangles
-        let timeSinceEvent = time-eventTime; // get the time since the event started
-        let timeSinceLastSync = timeSinceEvent % timeInterval;
-        bpmBar.posX += this.state.bpm / 120
+        bpmBar.posX += this.state.tempo / 60
         if(bpmBar.posX > canvas.width){
             bpmBar.posX = 0
             cancelAnimationFrame(this.playBpmBar)
-            this.setState({play: false})
-            lastFrameTime = time
+            this.setState({play: false}) 
             return null
         }else{
             this.drawCanvas()
             this.drawBpmBar()
             requestAnimationFrame(this.playBpmBar)
-            lastFrameTime = time;
         }
         rectangles.map(rect => this.onRectangleAndBPMCollision(rect))
     }
 
     onRectangleAndBPMCollision = (rect) => {
-        if(bpmBar.posX >= rect.posX  && bpmBar.posX <= rect.posX + rect.width){ 
-            const note = this.state.notes.find(note =>note.id === rect.note_id)
-            this.playSound(note.freq, audioContext)       
+        if(rect.note_id != null){
+            if(bpmBar.posX >= rect.posX-5 && bpmBar.posX <= rect.posX + rect.width){ 
+                const note = this.state.notes.find(note =>note.id === rect.note_id)
+                this.playSound(note.freq, audioContext,rect.width)
+                rect.note_id = null       
+            }   
         }   
     }
 
-    playSound = (freq, audio) =>{
+    playSound = (freq, audio, width) =>{
         const masterGainNode = audio.createGain();
         masterGainNode.connect(audio.destination);
         masterGainNode.gain.value = this.state.soundVolume;
@@ -104,8 +103,7 @@ export default class PlayCanvasModal extends React.Component{
         osc.type = 'sine';
         osc.frequency.value = freq;
         osc.start();
-        eventTime = new Date().valueOf()
-        osc.stop(audio.currentTime + 0.16)
+        masterGainNode.gain.setTargetAtTime(0, audio.currentTime+0.3, 0.1);
     }
 
     drawCanvas = () =>{
@@ -122,6 +120,7 @@ export default class PlayCanvasModal extends React.Component{
         const canvas = this.MusicCanvas.current
         const ctx = this.MusicCanvas.current.getContext('2d')
         let yIntersectArray = []
+        let xIntersectArray = []
         ctx.beginPath()
         let noteID = 1
             for(let i = 0; i < canvas.height; i+=(canvas.height/this.state.notes.length)){
@@ -132,7 +131,19 @@ export default class PlayCanvasModal extends React.Component{
             }
         ctx.strokeStyle = 'grey' 
         ctx.stroke()
-        return this.setState({gridYNoteBoundariesArray: yIntersectArray})
+        ctx.moveTo(0, 0)
+        ctx.beginPath()
+            for(let i = 0; i < canvas.width; i+=(canvas.width/(this.state.tempo/3))){
+                xIntersectArray.push({xValue: i})
+                ctx.moveTo(i, 0)
+                ctx.lineTo(i ,canvas.height)
+            }
+        ctx.strokeStyle = 'black' 
+        ctx.stroke()
+        return this.setState({
+            gridYNoteBoundariesArray: yIntersectArray,
+            gridXTempoBoundiesArray: xIntersectArray
+        })
     }
 
     drawRectangle = (x,y,width, height) =>{
@@ -166,8 +177,8 @@ export default class PlayCanvasModal extends React.Component{
             <div>
                 <canvas ref={this.MusicCanvas} id="music" width="1200" height="400"  style ={{background: '#303942'}}></canvas>
             </div>
-                <input type="range" id="bpm range" min="100" max="400" 
-                    value={this.state.bpm} 
+                <input type="range" id="tempo range" min="25" max="220"  
+                    value={this.state.tempo} 
                     onChange={this.onChangeBPMSlider}>
                 </input>
                 <button 
