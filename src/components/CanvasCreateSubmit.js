@@ -64,7 +64,7 @@ export default class CanvasCreateSubmit extends React.Component{
 
     render(){
         return(this.props.show ?
-            <div className='modal-content'>
+            <div className='submit-modal-content'>
                 <form onSubmit={this.handleProjectSubmit}>
                     <input placeholder="Project title" type="text" 
                         value={this.state.projectName}

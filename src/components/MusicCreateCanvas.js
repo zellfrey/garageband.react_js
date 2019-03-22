@@ -74,7 +74,7 @@ export default class MusicCreateCanvas extends React.Component{
         this.state.rectangles.map(rect => this.onGridSnap(rect))
         const canvas = this.MusicCanvas.current
         const rectList = this.state.rectangles
-        return this.props.newProjectFetch(name, desc, "", canvas.width, canvas.height, this.state.notes.length, rectList)
+        return this.props.newProjectFetch(name, "", desc, canvas.width, canvas.height, this.state.notes.length, rectList)
     }
 
     drawBpmBar = () =>{
@@ -106,17 +106,17 @@ export default class MusicCreateCanvas extends React.Component{
             requestAnimationFrame(this.playBpmBar)
             lastFrameTime = time;
         }
-        rectangles.map(rect => this.onRectangleAndBPMCollision(rect, frameTime, timeSinceEvent ))
+        rectangles.map(rect => this.onRectangleAndBPMCollision(rect))
     }
 
-    onRectangleAndBPMCollision = (rect, frameTime, timeSinceEvent) => {
+    onRectangleAndBPMCollision = (rect) => {
         if(bpmBar.posX >= rect.posX  && bpmBar.posX <= rect.posX + rect.width){ 
             const note = this.state.notes.find(note =>note.id === rect.note_id)
-            this.playSound(note.freq, audioContext, frameTime)       
+            this.playSound(note.freq, audioContext)       
         }   
     }
 
-    playSound = (freq, audio, frameTime) =>{
+    playSound = (freq, audio) =>{
         const masterGainNode = audio.createGain();
         masterGainNode.connect(audio.destination);
         masterGainNode.gain.value = this.state.soundVolume;
@@ -244,11 +244,32 @@ export default class MusicCreateCanvas extends React.Component{
                 <canvas ref={this.MusicCanvas} id="music" width="1200" height="400"  style ={{background: '#303942'}}
                 onMouseDown={this.dragRectangleStart} onMouseMove={this.dragRectangle} onMouseUp={this.dragRectangleEnd}></canvas>
             </div>
-                <input type="range" id="bpm range" min="100" max="400" value={this.state.bpm} onChange={this.onChangeBPMSlider}></input>
-                <button id="play" onClick={this.onPlay} >play</button>
-                <button id="add" onClick={this.onAdd} >add</button>
-                <input type="range" id="volume" min="0.0" max="1.0" step="0.01" value={this.state.soundVolume} onChange={this.onChangeVolumeSlider}></input>
-                <button id="save" onClick={this.onSaveProject} >save</button>
+                <input className={this.state.showSubmitModal ? "buttonHide" : "good"} 
+                    type="range" id="bpm range" min="100" max="400" 
+                    value={this.state.bpm} 
+                    onChange={this.onChangeBPMSlider}>
+                </input>
+                <button className={this.state.showSubmitModal ? "buttonHide" : "good"} 
+                    id="play" 
+                    onClick={this.onPlay} 
+                    >play
+                </button>
+                <button  className={this.state.showSubmitModal ? "buttonHide" : "good"}
+                    id="add" 
+                    onClick={this.onAdd} 
+                    >add
+                </button>
+                <input  className={this.state.showSubmitModal ? "buttonHide" : "good"}
+                    type="range" 
+                    id="volume" min="0.0" max="1.0" step="0.01" 
+                    value={this.state.soundVolume} 
+                    onChange={this.onChangeVolumeSlider}>
+                </input>
+                <button  className={this.state.showSubmitModal ? "buttonHide" : "good"}
+                    id="save" 
+                    onClick={this.onSaveProject} 
+                    >save
+                </button>
             <div>
                 <CanvasCreateSubmit 
                     show={this.state.showSubmitModal} 
