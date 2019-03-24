@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, withRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Route, withRouter, Switch } from 'react-router-dom';
 import NavBar from './components/NavBar'
 import Home from './components/Home'
 import MusicCreateCanvas from './components/MusicCreateCanvas'
 import Collection from './components/Collection'
+import UserPage from './components/UserPage'
+import Users from './components/Users'
+import UnknownPage from './components/UnknownPage'
 
 const notesURL = 'http://localhost:3000/api/v1/notes'
 const projectsURL = 'http://localhost:3000/api/v1/projects'
@@ -80,22 +83,26 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-      <NavBar/>
-      <Route exact path="/" component={Home} />
-      <Route exact path="/create"  render={
-        routerProps => <MusicCreateCanvas {...routerProps} 
-        notes={this.state.notes} 
-        newProjectFetch={this.newProjectFetch}
-        createEachRectangle={this.createEachRectangle}
-          />
-        }/>
-      <Route exact path="/collection" render={
-        routerProps => <Collection {...routerProps}
-        projects={this.state.projects}
-        notes={this.state.notes}
-        onHandleDeleteProject={this.onHandleDeleteProject}
-          />
-        } />
+        <NavBar/>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/create"  render={
+            routerProps => <MusicCreateCanvas {...routerProps} 
+            notes={this.state.notes} 
+            newProjectFetch={this.newProjectFetch}
+            createEachRectangle={this.createEachRectangle}
+              />
+            }/>
+          <Route exact path="/collection" render={
+            routerProps => <Collection {...routerProps}
+            projects={this.state.projects}
+            notes={this.state.notes}
+            onHandleDeleteProject={this.onHandleDeleteProject}
+              />
+            } />
+            <Route exact path="/users/:id" render={ routerProps => <Users {...routerProps} users={this.state.users}/>}/>
+            <Route component={UnknownPage}/>
+        </Switch>
       </div>
     );
   }
