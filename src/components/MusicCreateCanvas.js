@@ -1,11 +1,10 @@
 import React from 'react';
 import {bpmBar} from '../dummyData';
 import CanvasCreateSubmit from './CanvasCreateSubmit';
-import { BrowserRouter as Link } from "react-router-dom";
 import '../CanvasSubmit.css'
 
 
-const audioContext = new window.AudioContext()     
+const audioContext = new window.AudioContext() 
 export default class MusicCreateCanvas extends React.Component{
 
     constructor(props){
