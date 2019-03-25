@@ -14,6 +14,10 @@ export default class CollectionSearchBar extends React.Component{
                 <option value="Highest Rating">Highest Rating</option>
                 <option value="Lowest Rating">Lowest Rating</option>
             </select>
+            <input 
+                onChange={event => this.props.onFilterFormChange(event)}
+                placeholder='search projects'
+                />
             </div>
         )
     }
