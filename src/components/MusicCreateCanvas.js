@@ -280,7 +280,7 @@ export default class MusicCreateCanvas extends React.Component{
         <div className={this.state.showSubmitModal ? "modal" : "good"}>
         <h3>MusicCanvas</h3>
             <div>
-                <canvas ref={this.MusicCanvas} id="music" width="1200" height="400"  style ={{background: '#303942'}}
+                <canvas ref={this.MusicCanvas} id="music" width="1200" height="400"  style ={{background: '#303942', position: 'fixed', left: '25%'}}
                 onMouseDown={this.dragRectangleStart} onMouseMove={this.dragRectangle} onMouseUp={this.dragRectangleEnd} ></canvas>
             </div>
                 <input className={this.state.showSubmitModal ? "buttonHide" : "good"} 

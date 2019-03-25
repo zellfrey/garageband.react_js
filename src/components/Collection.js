@@ -17,7 +17,7 @@ export default class Collection extends React.Component{
         }
     }
 
-    componentDidUpdate(prevProps){
+    componentDidUpdate(prevProps, prevState){
         if(prevProps.projects !== this.props.projects){
             this.setState({projects: this.props.projects})
         }
@@ -47,12 +47,29 @@ export default class Collection extends React.Component{
         return(
         <div className={this.state.showCanvasModal ? "modal" : "good"}>
             Music creations
-            <CollectionSearchBar filterSelectOption={this.state.filterSelectOption} onFilterSelectChange={this.onFilterSelectChange} onFilterFormChange={this.props.onFilterFormChange}/>
+            <CollectionSearchBar 
+                filterSelectOption={this.state.filterSelectOption} 
+                onFilterSelectChange={this.onFilterSelectChange} 
+                onFilterFormChange={this.props.onFilterFormChange}
+                />
             <div className= 'CanvasList'>
             {
-            this.state.projects.map((project, idx)=>{return <ProjectCard key={idx} project={project} onHandleDeleteProject={this.props.onHandleDeleteProject} onHandleViewProject={this.onHandleViewProject}/>})
+            this.state.projects.map((project, idx)=>{
+                return <ProjectCard key={idx} 
+                        project={project} 
+                        onHandleDeleteProject={this.props.onHandleDeleteProject} 
+                        onHandleViewProject={this.onHandleViewProject} 
+                        onHandleLikeProject={this.props.onHandleLikeProject}/>
+                    }
+                )
             }
-            <PlayCanvasModal showCanvas={this.state.showCanvasModal} notes={this.props.notes} projectShow={this.state.projectShow} rectanglesShow={this.state.rectanglesShow} onHandleCloseProject={this.onHandleCloseProject}/>
+            <PlayCanvasModal 
+                showCanvas={this.state.showCanvasModal} 
+                notes={this.props.notes} 
+                projectShow={this.state.projectShow} 
+                rectanglesShow={this.state.rectanglesShow}
+                onHandleCloseProject={this.onHandleCloseProject}
+                />
             </div>
         </div>
         )
