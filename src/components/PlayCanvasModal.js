@@ -18,6 +18,7 @@ export default class PlayCanvasModal extends React.Component{
             gridYNoteBoundariesArray: [],
             gridXTempoBoundiesArray: [],
             tempo: 120,
+            stopBPM: false
         }
     }
 
@@ -26,7 +27,8 @@ export default class PlayCanvasModal extends React.Component{
         if(prevProps.projectShow !== this.props.projectShow && prevProps.rectanglesShow !== this.props.rectanglesShow){
             this.setState({
                 project: this.props.projectShow,
-                rectangles: this.props.rectanglesShow
+                rectangles: this.props.rectanglesShow,
+                stopBPM: false
             }) 
             this.drawCanvas()
         }
@@ -49,7 +51,8 @@ export default class PlayCanvasModal extends React.Component{
     }
 
     handleCanvasCleanUp = () =>{
-        cancelAnimationFrame(this.playBpmBar)
+        this.setState({stopBPM: true})
+        bpmBar.posX = 0;
         // this.setState({
         //     project: [],
         //     rectangles: []
@@ -68,20 +71,22 @@ export default class PlayCanvasModal extends React.Component{
     }
     
     playBpmBar =() => {
-        const canvas = this.MusicCanvas.current
-        const rectangles = this.state.rectangles
-        bpmBar.posX += this.state.tempo / 60
-        if(bpmBar.posX > canvas.width){
-            bpmBar.posX = 0
-            cancelAnimationFrame(this.playBpmBar)
-            this.setState({play: false}) 
-            return null
-        }else{
-            this.drawCanvas()
-            this.drawBpmBar()
-            requestAnimationFrame(this.playBpmBar)
+        if(!this.state.stopBPM){
+            const canvas = this.MusicCanvas.current
+            const rectangles = this.state.rectangles
+            bpmBar.posX += this.state.tempo / 60
+            if(bpmBar.posX > canvas.width){
+                bpmBar.posX = 0
+                cancelAnimationFrame(this.playBpmBar)
+                this.setState({play: false}) 
+                return null
+            }else{
+                this.drawCanvas()
+                this.drawBpmBar()
+                requestAnimationFrame(this.playBpmBar)
+            }
+            rectangles.map(rect => this.onRectangleAndBPMCollision(rect))
         }
-        rectangles.map(rect => this.onRectangleAndBPMCollision(rect))
     }
 
     onRectangleAndBPMCollision = (rect) => {

@@ -42,18 +42,16 @@ export default class MusicCreateCanvas extends React.Component{
         return this.drawCanvas()
     }
 
-    onPlay = () =>{
+    onPlayPause = () =>{
         if(!this.state.showSubmitModal){
-            this.setState({play: true})
             const rectangles  = this.state.rectangles
             this.playBpmBar(new Date().valueOf())
-             
             return (rectangles ? rectangles.map(rect => this.onGridSnap(rect)) : null)
         }     
     }
 
     onAdd = () =>{
-        if(!this.state.play && !this.state.showSubmitModal){
+        if(!this.state.playPause && !this.state.showSubmitModal){
             const canvas = this.MusicCanvas.current
             const newRectangle ={posX: 200, posY: 100, width: (canvas.width/(this.state.tempo/2)), height: (canvas.height/16)}
             this.setState({rectangles: this.state.rectangles.concat(newRectangle)})
@@ -97,7 +95,7 @@ export default class MusicCreateCanvas extends React.Component{
         if(bpmBar.posX > canvas.width+1){
             bpmBar.posX = 0
             cancelAnimationFrame(this.playBpmBar)
-            this.setState({play: false})
+            this.setState({playPause: false})
             return null
         }else{
             this.drawCanvas()
@@ -292,7 +290,7 @@ export default class MusicCreateCanvas extends React.Component{
                 </input>
                 <button className={this.state.showSubmitModal ? "buttonHide" : "good"} 
                     id="play" 
-                    onClick={this.onPlay} 
+                    onClick={this.onPlayPause} 
                     >play
                 </button>
                 <button  className={this.state.showSubmitModal ? "buttonHide" : "good"}
