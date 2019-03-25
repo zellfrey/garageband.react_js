@@ -26,6 +26,12 @@ export default class MusicCreateCanvas extends React.Component{
     }
 
 
+    componentWillUnmount(){
+        cancelAnimationFrame(this.playBpmBar)
+        bpmBar.move = false
+        bpmBar.posX = 0
+    }
+
     
     componentDidMount(){
         this.drawCanvas()
@@ -73,9 +79,6 @@ export default class MusicCreateCanvas extends React.Component{
             this.drawRectangle(newRectangle.posX, newRectangle.posY, newRectangle.width, newRectangle.height)
         }
     }
-
-    
-
 
     onChangeVolumeSlider = (e) =>{
         console.log(e.target.value)

@@ -22,8 +22,13 @@ export default class PlayCanvasModal extends React.Component{
             // stopBPM: false
         }
     }
-
-
+    
+    componentWillUnmount(){
+        cancelAnimationFrame(this.playBpmBar)
+        bpmBar.move = false
+        bpmBar.posX = 0
+    }
+    
     componentDidUpdate(prevProps){
         if(prevProps.projectShow !== this.props.projectShow && prevProps.rectanglesShow !== this.props.rectanglesShow){
             this.setState({
@@ -67,8 +72,7 @@ export default class PlayCanvasModal extends React.Component{
     }
 
     handleCanvasCleanUp = () =>{
-        // this.setState({stopBPM: true})
-        bpmBar.posX = 0;
+        this.onStop()
         return this.props.onHandleCloseProject()
     }
 
@@ -129,7 +133,7 @@ export default class PlayCanvasModal extends React.Component{
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         this.drawGrid()
-    return rectangles.map(rect => {this.drawRectangle(rect.posX, rect.posY, rect.width, rect.height)})
+    return rectangles.map(rect => {return this.drawRectangle(rect.posX, rect.posY, rect.width, rect.height)})
     }
 
     drawGrid = () =>{
