@@ -19,7 +19,6 @@ export default class PlayCanvasModal extends React.Component{
             gridYNoteBoundariesArray: [],
             gridXTempoBoundiesArray: [],
             tempo: 120,
-            // stopBPM: false
         }
     }
     
@@ -28,7 +27,7 @@ export default class PlayCanvasModal extends React.Component{
         bpmBar.move = false
         bpmBar.posX = 0
     }
-    
+
     componentDidUpdate(prevProps){
         if(prevProps.projectShow !== this.props.projectShow && prevProps.rectanglesShow !== this.props.rectanglesShow){
             this.setState({

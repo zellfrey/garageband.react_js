@@ -23,6 +23,7 @@ class App extends Component {
       rectangles: [],
       users: [],
       searchInput: '',
+      loggedUser: 2,
     }
   }
 
@@ -44,6 +45,11 @@ class App extends Component {
     return filterProjects
   }
 
+  filterSignedUser = ()=>{
+    const uniqUser = this.state.users.find(user => {return user.id ===this.state.loggedUser})
+    return uniqUser
+  }
+
   //Server stuff
   componentWillMount(){
     fetch(notesURL).then(resp => resp.json()).then(octave => this.setState({notes: octave}))
@@ -54,7 +60,7 @@ class App extends Component {
 
   //Project CRUD server fetch requests
   newProjectFetch =(name, img, desc, w, h, aON, tempo, rectangles) =>{
-    const newProject = {author_id: 1, name: name, image: img, description: desc, width: w,height: h, amount_of_notes: aON, tempo: tempo}
+    const newProject = {author_id: 2, name: name, image: img, description: desc, width: w,height: h, amount_of_notes: aON, tempo: tempo}
     return fetch(projectsURL,{
       method:'Post',
       headers: { 'Content-Type': 'application/json' },
@@ -129,7 +135,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <NavBar/>
+        <NavBar loggedUser={this.state.loggedUser}/>
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/create"  render={
@@ -148,7 +154,12 @@ class App extends Component {
             onHandleLikeProject={this.onHandleLikeProject}
               />
             } />
-            <Route exact path="/users/:id" render={ routerProps => <Users {...routerProps} users={this.state.users}/>}/>
+            <Route exact path={`/users/${this.state.loggedUser}`} render={ 
+              routerProps => <Users {...routerProps} 
+              filterSignedUser={this.filterSignedUser()} 
+              projects={this.state.projects}
+              /> 
+            }/>
             <Route component={UnknownPage}/>
         </Switch>
         {/* <div>Icons made by <a href="https://www.freepik.com/" 
