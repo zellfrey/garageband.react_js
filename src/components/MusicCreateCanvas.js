@@ -43,7 +43,6 @@ export default class MusicCreateCanvas extends React.Component{
 
     //button functions
     onChangeBPMSlider = (e) =>{
-        //console.log(e.target.value)
         this.setState({tempo: e.target.value})
         return this.drawCanvas()
     }
@@ -68,6 +67,7 @@ export default class MusicCreateCanvas extends React.Component{
         cancelAnimationFrame(this.playBpmBar)
         bpmBar.move = false
         bpmBar.posX = 0;
+        totalFrametime = 0;
         this.drawCanvas()
     }
 
@@ -300,7 +300,7 @@ export default class MusicCreateCanvas extends React.Component{
         <div className={this.state.showSubmitModal ? "modal" : "good"}>
         <h3>MusicCanvas</h3>
             <div>
-                <canvas ref={this.MusicCanvas} id="music" width="1200" height="400"  style ={{background: '#303942', position: 'fixed', left: '25%'}}
+                <canvas ref={this.MusicCanvas} id="music" width="1200" height="400"  style ={{background: '#303942'}}
                 onMouseDown={this.dragRectangleStart} onMouseMove={this.dragRectangle} onMouseUp={this.dragRectangleEnd} ></canvas>
             </div>
                 <input className={this.state.showSubmitModal ? "buttonHide" : "good"} 
