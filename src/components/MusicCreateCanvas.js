@@ -1,10 +1,10 @@
 import React from 'react';
-import {bpmBar} from '../dummyData';
 import CanvasCreateSubmit from './CanvasCreateSubmit';
 import '../CanvasSubmit.css'
 
 const audioContext = new window.AudioContext()   
 var totalFrametime = 0
+var bpmBar={posX: 0, move: false}
 export default class MusicCreateCanvas extends React.Component{
 
     constructor(props){
@@ -22,7 +22,6 @@ export default class MusicCreateCanvas extends React.Component{
             soundVolume: 0.5,
             play: false,
             showSubmitModal: false,
-            stopBPM: false
         }
     }
 
@@ -45,7 +44,7 @@ export default class MusicCreateCanvas extends React.Component{
 
     onPlay = () =>{
         if(!this.state.showSubmitModal){
-            this.setState({stopBPM: false})
+            bpmBar.move = true
             const rectangles  = this.state.rectangles
             this.drawBpmBar()
             
@@ -56,16 +55,14 @@ export default class MusicCreateCanvas extends React.Component{
     
     onPause = () =>{
         cancelAnimationFrame(this.playBpmBar)
-        this.setState({stopBPM: true})
-        this.drawBpmBar()
-        console.log(bpmBar.posX)
+        bpmBar.move = false
     }
 
     onStop = () =>{
         cancelAnimationFrame(this.playBpmBar)
+        bpmBar.move = false
         bpmBar.posX = 0;
-        this.setState({stopBPM: true})
-        console.log(bpmBar.posX)
+        this.drawCanvas()
     }
 
     onAdd = () =>{
@@ -106,7 +103,7 @@ export default class MusicCreateCanvas extends React.Component{
     }
     
     playBpmBar =(time) => {
-    if(!this.state.stopBPM){
+        if(bpmBar.move){
             const canvas = this.MusicCanvas.current
             const rectangles = this.state.rectangles
             bpmBar.posX += this.state.tempo/60
@@ -127,7 +124,7 @@ export default class MusicCreateCanvas extends React.Component{
 
     onRectangleAndBPMCollision = (rect) => {
         if(rect.note_id != null){
-            if(bpmBar.posX >= rect.posX-5 && bpmBar.posX <= rect.posX + rect.width){ 
+            if(bpmBar.posX >= rect.posX-3 && bpmBar.posX <= rect.posX + rect.width){ 
                 const note = this.state.notes.find(note =>note.id === rect.note_id)
                 this.playSound(note.freq, audioContext,rect.width)
                 rect.note_id = null       
