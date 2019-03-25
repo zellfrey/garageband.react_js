@@ -13,19 +13,21 @@ export default class Collection extends React.Component{
             projects: this.props.projects,
             projectShow: [],
             rectanglesShow: [],
-            showCanvasModal: false
+            showCanvasModal: false,
         }
     }
 
-    // componentDidUpdate(prevProps){
-    //     if(prevProps.projects !== this.props.projects){
-    //         this.setState({projects: this.props.projects})
-    //     }
-    // }
+    componentDidUpdate(prevProps){
+        if(prevProps.projects !== this.props.projects){
+            this.setState({projects: this.props.projects})
+        }
+    }
 
     onFilterSelectChange = (e) =>{
         this.setState({filterSelectOption: e.target.value})
     }
+
+    
 
     onHandleViewProject = (e) =>{
         console.log(e.target.id)
@@ -45,7 +47,7 @@ export default class Collection extends React.Component{
         return(
         <div className={this.state.showCanvasModal ? "modal" : "good"}>
             Music creations
-            <CollectionSearchBar filterSelectOption={this.state.filterSelectOption} onFilterSelectChange={this.onFilterSelectChange}/>
+            <CollectionSearchBar filterSelectOption={this.state.filterSelectOption} onFilterSelectChange={this.onFilterSelectChange} onFilterFormChange={this.props.onFilterFormChange}/>
             <div className= 'CanvasList'>
             {
             this.state.projects.map((project, idx)=>{return <ProjectCard key={idx} project={project} onHandleDeleteProject={this.props.onHandleDeleteProject} onHandleViewProject={this.onHandleViewProject}/>})

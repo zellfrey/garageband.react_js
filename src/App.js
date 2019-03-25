@@ -20,7 +20,8 @@ class App extends Component {
       notes: [],
       projects: [],
       rectangles: [],
-      users: []
+      users: [],
+      searchInput: '',
     }
   }
 
@@ -34,7 +35,7 @@ class App extends Component {
 
   //Project CRUD server fetch requests
   newProjectFetch =(name, img, desc, w, h, aON, tempo, rectangles) =>{
-    const newProject = { user_id: 2, name: name, image: img, description: desc, width: w,height: h, amount_of_notes: aON, tempo: tempo}
+    const newProject = { user_id: 1, name: name, image: img, description: desc, width: w,height: h, amount_of_notes: aON, tempo: tempo}
     return fetch(projectsURL,{
       method:'Post',
       headers: { 'Content-Type': 'application/json' },
@@ -79,6 +80,23 @@ class App extends Component {
       {method:'Delete'}).then(resp => resp.json())
   }
 
+  onFilterFormChange = (e) =>{
+    this.setState({searchInput: e.target.value})
+  }
+
+  filteredProjects = () =>{
+    const search = this.state.searchInput.toLowerCase()
+
+    const filterProjects = this.state.projects.filter(proj =>{
+      if(proj.name.toLowerCase().includes(search) === true){
+
+        return proj
+      }else if(proj.user.name.toLowerCase().includes(search) === true){
+        return proj
+      }
+    })
+    return filterProjects
+  }
 
   render() {
     return (
@@ -95,9 +113,10 @@ class App extends Component {
             }/>
           <Route exact path="/collection" render={
             routerProps => <Collection {...routerProps}
-            projects={this.state.projects}
+            projects={this.filteredProjects()}
             notes={this.state.notes}
             onHandleDeleteProject={this.onHandleDeleteProject}
+            onFilterFormChange={this.onFilterFormChange}
               />
             } />
             <Route exact path="/users/:id" render={ routerProps => <Users {...routerProps} users={this.state.users}/>}/>
