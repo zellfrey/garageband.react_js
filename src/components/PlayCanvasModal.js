@@ -1,9 +1,10 @@
 import React from 'react';
-import {bpmBar} from '../dummyData';
+// import {bpmBar} from '../dummyData';
 import '../PlayCanvasModal.css'
 
 
 const audioContext = new window.AudioContext()
+var bpmBar={posX: 0}
 export default class PlayCanvasModal extends React.Component{
     
     constructor(props){
@@ -40,10 +41,27 @@ export default class PlayCanvasModal extends React.Component{
     }
 
     onPlay = () =>{
-            const rectangles  = this.state.rectangles
-            this.playBpmBar(new Date().valueOf())
-            return (rectangles ? rectangles.map(rect => this.onGridSnap(rect)) : null)
-    }     
+        this.setState({stopBPM: false})
+        const rectangles  = this.state.rectangles
+        this.drawBpmBar()
+        
+        this.playBpmBar(new Date().valueOf())
+        return (rectangles ? rectangles.map(rect => this.onGridSnap(rect)) : null)
+    }
+    
+    onPause = () =>{
+        cancelAnimationFrame(this.playBpmBar)
+        this.setState({stopBPM: true})
+        this.drawBpmBar()
+        console.log(bpmBar.posX)
+    }
+
+    onStop = () =>{
+        cancelAnimationFrame(this.playBpmBar)
+        bpmBar.posX = 0;
+        this.setState({stopBPM: true})
+        console.log(bpmBar.posX)
+    }
 
     onChangeVolumeSlider = (e) =>{
         console.log(e.target.value)
@@ -53,10 +71,6 @@ export default class PlayCanvasModal extends React.Component{
     handleCanvasCleanUp = () =>{
         this.setState({stopBPM: true})
         bpmBar.posX = 0;
-        // this.setState({
-        //     project: [],
-        //     rectangles: []
-        // })
         return this.props.onHandleCloseProject()
     }
 
@@ -78,7 +92,6 @@ export default class PlayCanvasModal extends React.Component{
             if(bpmBar.posX > canvas.width){
                 bpmBar.posX = 0
                 cancelAnimationFrame(this.playBpmBar)
-                this.setState({play: false}) 
                 return null
             }else{
                 this.drawCanvas()
@@ -190,6 +203,16 @@ export default class PlayCanvasModal extends React.Component{
                     id="play" 
                     onClick={this.onPlay} 
                     >play
+                </button>
+                <button 
+                    id="pause" 
+                    onClick={this.onPause} 
+                    >pause
+                </button>
+                <button 
+                    id="stop" 
+                    onClick={this.onStop} 
+                    >stop
                 </button>
                 <input type="range" 
                     id="volume" min="0.0" max="1.0" step="0.01" 

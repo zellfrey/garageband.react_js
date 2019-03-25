@@ -22,6 +22,7 @@ export default class MusicCreateCanvas extends React.Component{
             soundVolume: 0.5,
             play: false,
             showSubmitModal: false,
+            stopBPM: false
         }
     }
 
@@ -42,12 +43,29 @@ export default class MusicCreateCanvas extends React.Component{
         return this.drawCanvas()
     }
 
-    onPlayPause = () =>{
+    onPlay = () =>{
         if(!this.state.showSubmitModal){
+            this.setState({stopBPM: false})
             const rectangles  = this.state.rectangles
+            this.drawBpmBar()
+            
             this.playBpmBar(new Date().valueOf())
             return (rectangles ? rectangles.map(rect => this.onGridSnap(rect)) : null)
-        }     
+        }
+    }
+    
+    onPause = () =>{
+        cancelAnimationFrame(this.playBpmBar)
+        this.setState({stopBPM: true})
+        this.drawBpmBar()
+        console.log(bpmBar.posX)
+    }
+
+    onStop = () =>{
+        cancelAnimationFrame(this.playBpmBar)
+        bpmBar.posX = 0;
+        this.setState({stopBPM: true})
+        console.log(bpmBar.posX)
     }
 
     onAdd = () =>{
@@ -88,21 +106,23 @@ export default class MusicCreateCanvas extends React.Component{
     }
     
     playBpmBar =(time) => {
-        const canvas = this.MusicCanvas.current
-        const rectangles = this.state.rectangles
-        bpmBar.posX += this.state.tempo/60
-        totalFrametime += time
-        if(bpmBar.posX > canvas.width+1){
-            bpmBar.posX = 0
-            cancelAnimationFrame(this.playBpmBar)
-            this.setState({playPause: false})
-            return null
-        }else{
-            this.drawCanvas()
-            this.drawBpmBar()
-            requestAnimationFrame(this.playBpmBar)
+    if(!this.state.stopBPM){
+            const canvas = this.MusicCanvas.current
+            const rectangles = this.state.rectangles
+            bpmBar.posX += this.state.tempo/60
+            totalFrametime += time
+            if(bpmBar.posX > canvas.width+1){
+                bpmBar.posX = 0
+                cancelAnimationFrame(this.playBpmBar)
+                this.setState({play: false}) 
+                return null
+            }else{
+                this.drawCanvas()
+                this.drawBpmBar()
+                requestAnimationFrame(this.playBpmBar)
+            }
+            rectangles.map(rect => this.onRectangleAndBPMCollision(rect))
         }
-        rectangles.map(rect => this.onRectangleAndBPMCollision(rect))
     }
 
     onRectangleAndBPMCollision = (rect) => {
@@ -288,10 +308,20 @@ export default class MusicCreateCanvas extends React.Component{
                     value={this.state.tempo} 
                     onChange={this.onChangeBPMSlider}>
                 </input>
-                <button className={this.state.showSubmitModal ? "buttonHide" : "good"} 
+                <button 
                     id="play" 
-                    onClick={this.onPlayPause} 
+                    onClick={this.onPlay} 
                     >play
+                </button>
+                <button 
+                    id="pause" 
+                    onClick={this.onPause} 
+                    >pause
+                </button>
+                <button 
+                    id="stop" 
+                    onClick={this.onStop} 
+                    >stop
                 </button>
                 <button  className={this.state.showSubmitModal ? "buttonHide" : "good"}
                     id="add" 
