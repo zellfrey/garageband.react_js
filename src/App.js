@@ -33,8 +33,8 @@ class App extends Component {
   }
 
   //Project CRUD server fetch requests
-  newProjectFetch =(name, img, desc, w, h, aON, rectangles) =>{
-    const newProject = { user_id: 2, name: name, image: img, description: desc, width: w,height: h, amount_of_notes: aON}
+  newProjectFetch =(name, img, desc, w, h, aON, tempo, rectangles) =>{
+    const newProject = { user_id: 2, name: name, image: img, description: desc, width: w,height: h, amount_of_notes: aON, tempo: tempo}
     return fetch(projectsURL,{
       method:'Post',
       headers: { 'Content-Type': 'application/json' },
