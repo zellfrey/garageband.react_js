@@ -13,14 +13,12 @@ export default class MusicCreateCanvas extends React.Component{
         this.state ={
             gridYNoteBoundariesArray: [],
             gridXTempoBoundiesArray: [],
-            freeForm: true,
-            animate: true,
             rectangles: [],
             notes: this.props.notes,
             clickedRectangle: null,
             tempo: 120,
             soundVolume: 0.5,
-            play: false,
+            playPause: false,
             showSubmitModal: false,
         }
     }
@@ -37,14 +35,30 @@ export default class MusicCreateCanvas extends React.Component{
         this.drawCanvas()
     }
 
+    componentDidUpdate(prevProps){
+        if(prevProps.notes !== this.props.notes){
+            this.setState({
+                notes: this.props.notes
+            })
+        }
+    }
+
     handleSubmitClose = () =>{
         this.setState({showSubmitModal: false})
     }
 
     //button functions
     onChangeBPMSlider = (e) =>{
+        const canvas = this.MusicCanvas.current
+        let rectList = this.state.rectangles
         this.setState({tempo: e.target.value})
-        return this.drawCanvas()
+
+        rectList.map(rect => this.onGridSnap(rect))
+            this.setState({rectangles: rectList})
+        this.drawCanvas()
+        for(const rect of rectList){
+            rect.width = canvas.width/(this.state.tempo/2)  
+        }
     }
 
     onPlay = () =>{
@@ -52,8 +66,9 @@ export default class MusicCreateCanvas extends React.Component{
             bpmBar.move = true
             const rectangles  = this.state.rectangles
             this.drawBpmBar()
-            
-            this.playBpmBar(new Date().valueOf())
+            this.playBpmBar(performance.now())
+            this.setState({playPause: true})
+            console.log(this.state.rectangles)
             return (rectangles ? rectangles.map(rect => this.onGridSnap(rect)) : null)
         }
     }
@@ -61,6 +76,7 @@ export default class MusicCreateCanvas extends React.Component{
     onPause = () =>{
         cancelAnimationFrame(this.playBpmBar)
         bpmBar.move = false
+        this.setState({playPause: false})
     }
 
     onStop = () =>{
@@ -69,14 +85,27 @@ export default class MusicCreateCanvas extends React.Component{
         bpmBar.posX = 0;
         totalFrametime = 0;
         this.drawCanvas()
+        if(this.state.playPause){
+            this.setState({playPause: false})
+        }
     }
 
     onAdd = () =>{
         if(!this.state.playPause && !this.state.showSubmitModal){
             const canvas = this.MusicCanvas.current
             const newRectangle ={posX: 200, posY: 100, width: (canvas.width/(this.state.tempo/2)), height: (canvas.height/16)}
-            this.setState({rectangles: this.state.rectangles.concat(newRectangle)})
+            const rectList = this.state.rectangles.concat(newRectangle)
+            this.setState({rectangles: rectList})
             this.drawRectangle(newRectangle.posX, newRectangle.posY, newRectangle.width, newRectangle.height)
+        }
+    }
+
+    onRemove =() =>{
+        if(!this.state.playPause && !this.state.showSubmitModal){
+            console.log(this.state.rectangles)
+            const rectList = this.state.rectangles.splice(-1)
+            this.setState({rectangles: rectList})
+            this.drawCanvas()
         }
     }
 
@@ -89,9 +118,13 @@ export default class MusicCreateCanvas extends React.Component{
     }
 
     onProjectSave = (name, desc) =>{
+        const tempo = this.state.tempo
         this.state.rectangles.map(rect => this.onGridSnap(rect))
         const canvas = this.MusicCanvas.current
         const rectList = this.state.rectangles
+        for(const rect of rectList){
+            rect.width = canvas.width/(tempo/2)  
+        }
         return this.props.newProjectFetch(name, "", desc, canvas.width, canvas.height, this.state.notes.length, this.state.tempo, rectList)
     }
 
@@ -114,7 +147,7 @@ export default class MusicCreateCanvas extends React.Component{
             if(bpmBar.posX > canvas.width+1){
                 bpmBar.posX = 0
                 cancelAnimationFrame(this.playBpmBar)
-                this.setState({play: false}) 
+                this.onStop() 
                 return null
             }else{
                 this.drawCanvas()
@@ -143,11 +176,9 @@ export default class MusicCreateCanvas extends React.Component{
         osc.connect(masterGainNode);
         osc.type = 'sine';
         osc.frequency.value = freq;
-        // debugger
         osc.start();
         //Gradually descreases the sound, preventing the "click" sound affect
         masterGainNode.gain.setTargetAtTime(0, audio.currentTime+((width*0.016)), 0.1);
-        // debugger
 
         //Left to demonstrate the difference. This function below stops the wave propagantion immediately
         //creating a click. Causes sharp transitions in sound
@@ -221,21 +252,19 @@ export default class MusicCreateCanvas extends React.Component{
             uniqRect.note_id = yUpperBound.note_id
             this.drawCanvas()
         }
-
-        if(this.state.freeForm){
         //Xbound snap
-            const xBoundaries = this.state.gridXTempoBoundiesArray
-            const xBoundList = xBoundaries.filter(xCoord =>{return Math.abs(xCoord.xValue - uniqRect.posX) < (xBoundaries[1].xValue +1)})
-            let xLeftBound = xBoundList[0]
-            let xRightBound = xBoundList[1]
-            if(Math.abs(uniqRect.posX - xLeftBound.xValue) < Math.abs(uniqRect.posX - xRightBound.xValue)){
-                uniqRect.posX = xLeftBound.xValue
-                this.drawCanvas()
-            }
-            else{
-                uniqRect.posX = xRightBound.xValue
-                this.drawCanvas()
-            }
+        const xBoundaries = this.state.gridXTempoBoundiesArray
+        const xBoundList = xBoundaries.filter(xCoord =>{return Math.abs(xCoord.xValue - uniqRect.posX) < (xBoundaries[1].xValue +1)})
+        let xLeftBound = xBoundList[0]
+        let xRightBound = xBoundList[1]
+
+        if(Math.abs(uniqRect.posX - xLeftBound.xValue) < Math.abs(uniqRect.posX - xRightBound.xValue)){
+            uniqRect.posX = xLeftBound.xValue
+            this.drawCanvas()
+        }
+        else{
+            uniqRect.posX = xRightBound.xValue
+            this.drawCanvas()
         }
        
     }
@@ -288,9 +317,16 @@ export default class MusicCreateCanvas extends React.Component{
     }
 
     dragRectangleEnd = () =>{
+        let rectList = this.state.rectangles
         let clickedRect = this.state.clickedRectangle
         if(clickedRect){
-            this.onGridSnap(clickedRect)
+            for(const rect of rectList){
+                if(rect.id === clickedRect.id){
+                    rect = clickedRect
+                }
+            }
+            rectList.map(rect => this.onGridSnap(rect))
+            this.setState({rectangles: rectList})
             return this.setState({clickedRectangle: null})
         }
     }
@@ -299,6 +335,7 @@ export default class MusicCreateCanvas extends React.Component{
         return(
         <div className={this.state.showSubmitModal ? "modal" : "good"}>
         <h3>MusicCanvas</h3>
+        <div>{totalFrametime}</div> 
             <div>
                 <canvas ref={this.MusicCanvas} id="music" width="1200" height="400"  style ={{background: '#303942'}}
                 onMouseDown={this.dragRectangleStart} onMouseMove={this.dragRectangle} onMouseUp={this.dragRectangleEnd} ></canvas>
@@ -308,16 +345,12 @@ export default class MusicCreateCanvas extends React.Component{
                     value={this.state.tempo} 
                     onChange={this.onChangeBPMSlider}>
                 </input>
-                <button 
-                    id="play" 
-                    onClick={this.onPlay} 
-                    >play
-                </button>
-                <button 
-                    id="pause" 
-                    onClick={this.onPause} 
-                    >pause
-                </button>
+                {
+                    !this.state.playPause ?
+                    <button id="play" onClick={this.onPlay}>play</button>
+                    :
+                    <button id="pause" onClick={this.onPause}>pause</button>
+                }
                 <button 
                     id="stop" 
                     onClick={this.onStop} 
@@ -327,6 +360,11 @@ export default class MusicCreateCanvas extends React.Component{
                     id="add" 
                     onClick={this.onAdd} 
                     >add
+                </button>
+                <button  className={this.state.showSubmitModal ? "buttonHide" : "good"}
+                    id="remove" 
+                    onClick={this.onRemove} 
+                    >remove
                 </button>
                 <input  className={this.state.showSubmitModal ? "buttonHide" : "good"}
                     type="range" 
@@ -339,7 +377,6 @@ export default class MusicCreateCanvas extends React.Component{
                     onClick={this.onSaveProject} 
                     >save
                 </button>
-                {totalFrametime}
             <div>
                 <CanvasCreateSubmit 
                     show={this.state.showSubmitModal} 

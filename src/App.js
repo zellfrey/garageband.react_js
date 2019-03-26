@@ -4,7 +4,6 @@ import NavBar from './components/NavBar'
 import Home from './components/Home'
 import MusicCreateCanvas from './components/MusicCreateCanvas'
 import Collection from './components/Collection'
-import UserPage from './components/UserPage'
 import Users from './components/Users'
 import UnknownPage from './components/UnknownPage'
 
@@ -38,7 +37,7 @@ class App extends Component {
       if(proj.name.toLowerCase().includes(search) === true){
 
         return proj
-      }else if(proj.user.name.toLowerCase().includes(search) === true){
+      }else if(proj.author.name.toLowerCase().includes(search) === true){
         return proj
       }
     })
@@ -59,6 +58,7 @@ class App extends Component {
   }
 
   //Project CRUD server fetch requests
+
   newProjectFetch =(name, img, desc, w, h, aON, tempo, rectangles) =>{
     const newProject = {author_id: 2, name: name, image: img, description: desc, width: w,height: h, amount_of_notes: aON, tempo: tempo}
     return fetch(projectsURL,{
@@ -86,6 +86,7 @@ class App extends Component {
   }
 
   //Rectangle CRUD server fetch requests
+
   createEachRectangle = (rectangles, proj_id)=>{
     for(const rect of rectangles){
       rect.project_id = proj_id

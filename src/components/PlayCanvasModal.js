@@ -14,10 +14,11 @@ export default class PlayCanvasModal extends React.Component{
             project: [],
             rectangles: [],
             notes: this.props.notes,
-            soundVolume: 0.5,
+            soundVolume: 0.2,
             gridYNoteBoundariesArray: [],
             gridXTempoBoundiesArray: [],
             tempo: 120,
+            playPause: false
         }
     }
     
@@ -32,7 +33,8 @@ export default class PlayCanvasModal extends React.Component{
             this.setState({
                 project: this.props.projectShow,
                 rectangles: this.props.rectanglesShow,
-                stopBPM: false
+                stopBPM: false,
+                tempo: this.props.projectShow.tempo
             }) 
             this.drawCanvas()
         }else if(prevProps.notes !== this.props.notes){
@@ -42,8 +44,11 @@ export default class PlayCanvasModal extends React.Component{
         }
     }
     onChangeBPMSlider = (e) =>{
-        console.log(e.target.value)
+        let rectList = this.state.rectangles
         this.setState({tempo: e.target.value})
+
+        rectList.map(rect => this.onGridSnap(rect))
+            this.setState({rectangles: rectList})
         return this.drawCanvas()
     }
 
@@ -51,14 +56,15 @@ export default class PlayCanvasModal extends React.Component{
         bpmBar.move = true
         const rectangles  = this.state.rectangles
         this.drawBpmBar()
-        
         this.playBpmBar(new Date().valueOf())
+        this.setState({playPause: true})
         return (rectangles ? rectangles.map(rect => this.onGridSnap(rect)) : null)
     }
     
     onPause = () =>{
         cancelAnimationFrame(this.playBpmBar)
         bpmBar.move = false
+        this.setState({playPause: false})
     }
 
     onStop = () =>{
@@ -66,6 +72,9 @@ export default class PlayCanvasModal extends React.Component{
         bpmBar.move = false
         bpmBar.posX = 0;
         this.drawCanvas()
+        if(this.state.playPause){
+            this.setState({playPause: false})
+        }
     }
 
     onChangeVolumeSlider = (e) =>{
@@ -94,8 +103,10 @@ export default class PlayCanvasModal extends React.Component{
             const rectangles = this.state.rectangles
             bpmBar.posX += this.state.tempo / 60
             if(bpmBar.posX > canvas.width){
+                debugger
                 bpmBar.posX = 0
                 cancelAnimationFrame(this.playBpmBar)
+                this.onStop()
                 return null
             }else{
                 this.drawCanvas()
@@ -125,7 +136,7 @@ export default class PlayCanvasModal extends React.Component{
         osc.type = 'sine';
         osc.frequency.value = freq;
         osc.start();
-        masterGainNode.gain.setTargetAtTime(0, audio.currentTime+0.3, 0.1);
+        masterGainNode.gain.setTargetAtTime(0, audio.currentTime+((width*0.016)), 0.1);
     }
 
     drawCanvas = () =>{
@@ -155,7 +166,7 @@ export default class PlayCanvasModal extends React.Component{
         ctx.stroke()
         ctx.moveTo(0, 0)
         ctx.beginPath()
-            for(let i = 0; i < canvas.width; i+=(canvas.width/(this.state.tempo/3))){
+            for(let i = 0; i < canvas.width; i+=(canvas.width/(this.state.tempo/2))){
                 xIntersectArray.push({xValue: i})
                 ctx.moveTo(i, 0)
                 ctx.lineTo(i ,canvas.height)
@@ -169,9 +180,10 @@ export default class PlayCanvasModal extends React.Component{
     }
 
     drawRectangle = (x,y,width, height) =>{
+        const canvas = this.MusicCanvas.current
         const ctx = this.MusicCanvas.current.getContext('2d')
         ctx.fillStyle = `rgb(32,178,${y})`;
-        ctx.fillRect(x, y, width, height);
+        ctx.fillRect(x, y, (canvas.width/(this.state.tempo/2)), height);
     }
 
     onGridSnap = (rectangle) =>{
@@ -191,6 +203,20 @@ export default class PlayCanvasModal extends React.Component{
             uniqRect.note_id = yUpperBound.note_id
             this.drawCanvas()
         }
+        //Xbound snap
+        const xBoundaries = this.state.gridXTempoBoundiesArray
+        const xBoundList = xBoundaries.filter(xCoord =>{return Math.abs(xCoord.xValue - uniqRect.posX) < (xBoundaries[1].xValue +1)})
+        let xLeftBound = xBoundList[0]
+        let xRightBound = xBoundList[1]
+
+        if(Math.abs(uniqRect.posX - xLeftBound.xValue) < Math.abs(uniqRect.posX - xRightBound.xValue)){
+            uniqRect.posX = xLeftBound.xValue
+            this.drawCanvas()
+        }
+        else{
+            uniqRect.posX = xRightBound.xValue
+            this.drawCanvas()
+        }
     }
     render(){
         return (this.props.showCanvas ?
@@ -199,20 +225,16 @@ export default class PlayCanvasModal extends React.Component{
             <div>
                 <canvas ref={this.MusicCanvas} id="music" width="1200" height="400"  style ={{background: '#303942'}}></canvas>
             </div>
-                <input type="range" id="tempo range" min="25" max="220"  
+                {/* <input type="range" id="tempo range" min="25" max="220"  
                     value={this.state.tempo} 
                     onChange={this.onChangeBPMSlider}>
-                </input>
-                <button 
-                    id="play" 
-                    onClick={this.onPlay} 
-                    >play
-                </button>
-                <button 
-                    id="pause" 
-                    onClick={this.onPause} 
-                    >pause
-                </button>
+                </input> */}
+                {
+                    !this.state.playPause ?
+                    <button id="play" onClick={this.onPlay}>play</button>
+                    :
+                    <button id="pause" onClick={this.onPause}>pause</button>
+                }
                 <button 
                     id="stop" 
                     onClick={this.onStop} 
