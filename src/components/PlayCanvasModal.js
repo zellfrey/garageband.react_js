@@ -1,5 +1,4 @@
 import React from 'react';
-// import {bpmBar} from '../dummyData';
 import '../PlayCanvasModal.css'
 
 
@@ -36,6 +35,10 @@ export default class PlayCanvasModal extends React.Component{
                 stopBPM: false
             }) 
             this.drawCanvas()
+        }else if(prevProps.notes !== this.props.notes){
+            this.setState({
+                notes: this.props.notes
+            })
         }
     }
     onChangeBPMSlider = (e) =>{

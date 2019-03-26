@@ -149,7 +149,6 @@ class App extends Component {
             routerProps => <Collection {...routerProps}
             projects={this.filteredProjects()}
             notes={this.state.notes}
-            onHandleDeleteProject={this.onHandleDeleteProject}
             onFilterFormChange={this.onFilterFormChange}
             onHandleLikeProject={this.onHandleLikeProject}
               />
@@ -158,6 +157,8 @@ class App extends Component {
               routerProps => <Users {...routerProps} 
               filterSignedUser={this.filterSignedUser()} 
               projects={this.state.projects}
+              notes={this.state.notes}
+              onHandleDeleteProject={this.onHandleDeleteProject}
               /> 
             }/>
             <Route component={UnknownPage}/>
