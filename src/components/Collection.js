@@ -57,7 +57,6 @@ export default class Collection extends React.Component{
             this.state.projects.map((project, idx)=>{
                 return <ProjectCard key={idx} 
                         project={project} 
-                        onHandleDeleteProject={this.props.onHandleDeleteProject} 
                         onHandleViewProject={this.onHandleViewProject} 
                         onHandleLikeProject={this.props.onHandleLikeProject}/>
                     }

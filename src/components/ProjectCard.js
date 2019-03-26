@@ -10,7 +10,6 @@ export default class ProjectCard extends React.Component{
                 <p> Made by:{this.props.project.author.name}</p>
                 <p> Likes:{this.props.project.likes.length}</p>
                 <button onClick={this.props.onHandleLikeProject} id={this.props.project.id}>Like</button>
-                <button onClick={this.props.onHandleDeleteProject} id={this.props.project.id}>Delete</button>
                 <button onClick={this.props.onHandleViewProject} id={this.props.project.id}>View</button>
             </div>
         )
