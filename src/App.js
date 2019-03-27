@@ -112,7 +112,7 @@ class App extends Component {
     const id = parseInt(e.target.parentElement.id)
     const selectedProj = this.state.projects.find(proj =>proj.id === id)
     selectedProj.rectangles.map(rect => this.deleteRectangleFetch(rect.id))
-    return fetch(`http://localhost:3000/api/v1/projects/${e.target.id}`,
+    return fetch(`http://localhost:3000/api/v1/projects/${selectedProj.id}`,
       {method:'Delete'}).then(resp => resp.json())
       .then(resp => {
         this.setState({projects: this.state.projects.filter(proj => {return proj.id !== resp.id})})
@@ -168,10 +168,10 @@ class App extends Component {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editedRect)
         }).then(resp => resp.json())
-          // .then( updatedRectangle => {
-          //   const updatedRectangles = this.state.rectangles.map( r => r.id === updatedRectangle.id ? updatedRectangle : r)
-          //   this.setState({ rectangles: updatedRectangles })
-        //})
+          .then( updatedRectangle => {
+            const updatedRectangles = this.state.rectangles.map( r => r.id === updatedRectangle.id ? updatedRectangle : r)
+            this.setState({ rectangles: updatedRectangles })
+        })
     }
 
 
