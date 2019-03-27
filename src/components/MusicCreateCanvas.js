@@ -25,6 +25,7 @@ export default class MusicCreateCanvas extends React.Component{
             playPause: false,
             showSubmitModal: false,
             showEditModal: false,
+            loop: false,
         }
     }
 
@@ -89,6 +90,7 @@ export default class MusicCreateCanvas extends React.Component{
     }
 
     onStop = () =>{
+        this.setState({loop: false})
         cancelAnimationFrame(this.playBpmBar)
         bpmBar.move = false
         bpmBar.posX = 0;
@@ -97,6 +99,10 @@ export default class MusicCreateCanvas extends React.Component{
         if(this.state.playPause){
             this.setState({playPause: false})
         }
+    }
+    setLoop = () =>{
+        this.setState({loop: true})
+        console.log(this.state.loop)
     }
 
     onAdd = () =>{
@@ -163,15 +169,25 @@ export default class MusicCreateCanvas extends React.Component{
     
     playBpmBar =(time) => {
         if(bpmBar.move){
+            let rectList = this.state.rectangles
             const canvas = this.MusicCanvas.current
             const rectangles = this.state.rectangles
             bpmBar.posX += this.state.tempo/60
             totalFrametime += time
             if(bpmBar.posX > canvas.width+1){
                 bpmBar.posX = 0
-                cancelAnimationFrame(this.playBpmBar)
-                this.onStop() 
-                return null
+                if(this.state.loop){
+                    bpmBar.posX += this.state.tempo/60
+                    this.drawCanvas()
+                    this.drawBpmBar()
+                    rectList.map(rect => this.onGridSnap(rect))
+                        this.setState({rectangles: rectList})
+                    requestAnimationFrame(this.playBpmBar)
+                }else{
+                    cancelAnimationFrame(this.playBpmBar)
+                    this.onStop() 
+                    return null     
+                }
             }else{
                 this.drawCanvas()
                 this.drawBpmBar()
@@ -408,6 +424,11 @@ export default class MusicCreateCanvas extends React.Component{
                     id="save" 
                     onClick={this.onSaveProject} 
                     >{this.state.projectEdit ? "Save Edit": "Save"}
+                </button>
+                <button  className={this.state.showSubmitModal ? "buttonHide" : "good"}
+                    id="loop" 
+                    onClick={this.setLoop} 
+                    >{this.state.loop ? "fix" : "loop"}
                 </button>
             <div>
                 <CanvasCreateSubmit 

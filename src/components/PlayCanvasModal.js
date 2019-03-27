@@ -20,7 +20,8 @@ export default class PlayCanvasModal extends React.Component{
             gridYNoteBoundariesArray: [],
             gridXTempoBoundiesArray: [],
             tempo: 120,
-            playPause: false
+            playPause: false,
+            loop: false,
         }
     }
     
@@ -67,6 +68,7 @@ export default class PlayCanvasModal extends React.Component{
     }
 
     onStop = () =>{
+        this.setState({loop: false})
         cancelAnimationFrame(this.playBpmBar)
         bpmBar.move = false
         bpmBar.posX = 0;
@@ -76,6 +78,11 @@ export default class PlayCanvasModal extends React.Component{
         }
     }
 
+    setLoop = () =>{
+        this.setState({loop: true})
+        console.log(this.state.loop)
+    }
+
     onChangeVolumeSlider = (e) =>{
         console.log(e.target.value)
         return this.setState({soundVolume: e.target.value})
@@ -83,7 +90,6 @@ export default class PlayCanvasModal extends React.Component{
 
     handleCanvasCleanUp = () =>{
         this.onStop()
-        this.drawCanvas()
         return this.props.onHandleCloseProject()
     }
 
@@ -99,14 +105,24 @@ export default class PlayCanvasModal extends React.Component{
     
     playBpmBar =() => {
         if(bpmBar.move){
+            let rectList = this.state.rectangles
             const canvas = this.MusicCanvas.current
             const rectangles = this.state.rectangles
-            bpmBar.posX += this.state.tempo / 60
-            if(bpmBar.posX > canvas.width){
+            bpmBar.posX += this.state.tempo/60
+            if(bpmBar.posX > canvas.width+1){
                 bpmBar.posX = 0
-                cancelAnimationFrame(this.playBpmBar)
-                this.onStop()
-                return null
+                if(this.state.loop){
+                    bpmBar.posX += this.state.tempo/60
+                    this.drawCanvas()
+                    this.drawBpmBar()
+                    rectList.map(rect => this.onGridSnap(rect))
+                        this.setState({rectangles: rectList})
+                    requestAnimationFrame(this.playBpmBar)
+                }else{
+                    cancelAnimationFrame(this.playBpmBar)
+                    this.onStop() 
+                    return null     
+                }
             }else{
                 this.drawCanvas()
                 this.drawBpmBar()
@@ -244,6 +260,11 @@ export default class PlayCanvasModal extends React.Component{
                     value={this.state.soundVolume} 
                     onChange={this.onChangeVolumeSlider}>
                 </input>
+                <button
+                    id="loop" 
+                    onClick={this.setLoop} 
+                    >{this.state.loop ? "fix" : "loop"}
+                </button>
                 <button 
                     id="close" 
                     onClick={this.handleCanvasCleanUp} 
