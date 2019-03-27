@@ -22,6 +22,7 @@ export default class PlayCanvasModal extends React.Component{
             tempo: 120,
             playPause: false,
             loop: false,
+            playOnce: true,
         }
     }
     
@@ -31,17 +32,21 @@ export default class PlayCanvasModal extends React.Component{
         bpmBar.posX = 0
     }
 
-    componentDidUpdate(prevProps){
+    componentDidUpdate(prevProps, prevState){
         if(prevProps.projectShow !== this.props.projectShow && prevProps.rectanglesShow !== this.props.rectanglesShow){
             this.setState({
                 project: this.props.projectShow,
                 notes: this.props.notes,
                 rectangles: this.props.rectanglesShow,
-                stopBPM: false,
                 tempo: this.props.projectShow.tempo
             })
             requestAnimationFrame(this.drawCanvas)
         }
+        if(this.props.showCanvas && this.state.playOnce){
+            requestAnimationFrame(this.drawCanvas)
+            this.setState({playOnce: false})
+        }
+
     }
     onChangeBPMSlider = (e) =>{
         let rectList = this.state.rectangles
@@ -90,7 +95,8 @@ export default class PlayCanvasModal extends React.Component{
 
     handleCanvasCleanUp = () =>{
         this.onStop()
-        return this.props.onHandleCloseProject()
+        this.props.onHandleCloseProject()
+        return this.setState({playOnce: true})
     }
 
     drawBpmBar = () =>{
