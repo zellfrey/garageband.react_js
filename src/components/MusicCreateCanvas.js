@@ -1,6 +1,8 @@
 import React from 'react';
 import CanvasCreateSubmit from './CanvasCreateSubmit';
 import CanvasEditSubmit from './CanvasEditSubmit';
+import playButton from '../canvas_imgs/music-player-play.png';
+import pauseButton from '../canvas_imgs/music-player-pause-lines.png';
 import '../CanvasSubmit.css'
 
 const audioContext = new window.AudioContext()   
@@ -370,9 +372,13 @@ export default class MusicCreateCanvas extends React.Component{
                 </input>
                 {
                     !this.state.playPause ?
-                    <button id="play" onClick={this.onPlay}>play</button>
+                    <div onClick={this.onPlay}>
+                    <img src={playButton} alt="play"></img>
+                    </div>
                     :
-                    <button id="pause" onClick={this.onPause}>pause</button>
+                    <div onClick={this.onPause}>
+                    <img src={pauseButton} alt="pause"></img>
+                    </div>
                 }
                 <button 
                     id="stop" 
