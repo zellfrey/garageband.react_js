@@ -11,16 +11,31 @@ export default class Collection extends React.Component{
         this.state={
             filterSelectOption: "All",
             projects: this.props.projects,
+            notes: this.props.notes,
             projectShow: [],
             rectanglesShow: [],
             showCanvasModal: false,
         }
     }
 
-    componentDidUpdate(prevProps, prevState){
+    componentDidUpdate(prevProps){
         if(prevProps.projects !== this.props.projects){
-            this.setState({projects: this.props.projects})
+            this.setState({
+                projects: this.props.projects,
+                notes: this.props.notes
+            })
         }
+    }
+
+    renderProjectCards = ()=>{
+       const projectCards = this.props.projects.map((project, idx)=>{
+            return <ProjectCard key={idx} 
+                    project={project} 
+                    onHandleViewProject={this.onHandleViewProject} 
+                    onHandleLikeProject={this.props.onHandleLikeProject}/>
+                }
+            )
+        return projectCards
     }
 
     onFilterSelectChange = (e) =>{
@@ -52,18 +67,10 @@ export default class Collection extends React.Component{
                 onFilterFormChange={this.props.onFilterFormChange}
                 />
             <div className= 'CanvasList'>
-            {
-            this.state.projects.map((project, idx)=>{
-                return <ProjectCard key={idx} 
-                        project={project} 
-                        onHandleViewProject={this.onHandleViewProject} 
-                        onHandleLikeProject={this.props.onHandleLikeProject}/>
-                    }
-                )
-            }
+            {this.renderProjectCards()}
             <PlayCanvasModal 
                 showCanvas={this.state.showCanvasModal} 
-                notes={this.props.notes} 
+                notes={this.state.notes} 
                 projectShow={this.state.projectShow} 
                 rectanglesShow={this.state.rectanglesShow}
                 onHandleCloseProject={this.onHandleCloseProject}

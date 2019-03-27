@@ -196,7 +196,23 @@ class App extends Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(like)
     })
-    .then(resp => resp.json()).then(resp => console.log(resp))
+    .then(resp => resp.json())
+    .then(addedLike => this.updateProjectLikes(addedLike))
+  }
+
+  updateProjectLikes = (like) =>{
+    const projects = this.state.projects
+    const uniqProject = projects.find(p => {return p.id === like.project_id})
+    const updatedProjects= []
+    for(const proj of projects){
+        if(proj.id === uniqProject.id){
+            proj.likes.push(like)
+            updatedProjects.push(proj) 
+        }else{
+          updatedProjects.push(proj)  
+        }
+    }
+    return this.setState({projects: updatedProjects})
   }
 
   deleteLikeFetch = (likeID) =>{
