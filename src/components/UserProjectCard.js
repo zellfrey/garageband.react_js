@@ -8,8 +8,9 @@ const UserProjectCard = (props) =>{
             <img src={props.project.image} alt={props.project.id} width="500" height="600"></img>
             <p>{props.description}</p>
             <p> Likes:{props.project.likes.length}</p>
-        <button onClick={props.onHandleDeleteProject} id={props.project.id}>Delete</button>
-        <button onClick={props.onHandleViewProject} id={props.project.id}>View</button>
+            <button onClick={props.onHandleDeleteProject}>Delete</button>
+            <button onClick={props.onHandleViewProject}>View</button>
+            <button onClick={props.onHandleEditProject}>Edit</button>
         </div>
 
     )

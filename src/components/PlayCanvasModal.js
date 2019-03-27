@@ -103,7 +103,6 @@ export default class PlayCanvasModal extends React.Component{
             const rectangles = this.state.rectangles
             bpmBar.posX += this.state.tempo / 60
             if(bpmBar.posX > canvas.width){
-                debugger
                 bpmBar.posX = 0
                 cancelAnimationFrame(this.playBpmBar)
                 this.onStop()
@@ -225,10 +224,6 @@ export default class PlayCanvasModal extends React.Component{
             <div>
                 <canvas ref={this.MusicCanvas} id="music" width="1200" height="400"  style ={{background: '#303942'}}></canvas>
             </div>
-                {/* <input type="range" id="tempo range" min="25" max="220"  
-                    value={this.state.tempo} 
-                    onChange={this.onChangeBPMSlider}>
-                </input> */}
                 {
                     !this.state.playPause ?
                     <button id="play" onClick={this.onPlay}>play</button>

@@ -1,5 +1,6 @@
 import React from 'react';
 import CanvasCreateSubmit from './CanvasCreateSubmit';
+import CanvasEditSubmit from './CanvasEditSubmit';
 import '../CanvasSubmit.css'
 
 const audioContext = new window.AudioContext()   
@@ -13,13 +14,15 @@ export default class MusicCreateCanvas extends React.Component{
         this.state ={
             gridYNoteBoundariesArray: [],
             gridXTempoBoundiesArray: [],
-            rectangles: [],
+            projectEdit: this.props.projectEdit,
+            rectangles: this.props.projectEdit ? this.props.projectEdit.rectangles : [],
             notes: this.props.notes,
             clickedRectangle: null,
-            tempo: 120,
+            tempo: this.props.projectEdit ? this.props.projectEdit.tempo : 120,
             soundVolume: 0.5,
             playPause: false,
             showSubmitModal: false,
+            showEditModal: false,
         }
     }
 
@@ -44,7 +47,11 @@ export default class MusicCreateCanvas extends React.Component{
     }
 
     handleSubmitClose = () =>{
-        this.setState({showSubmitModal: false})
+        if(this.state.projectEdit){
+            this.setState({showEditModal: false}) 
+        }else{
+            this.setState({showSubmitModal: false}) 
+        }
     }
 
     //button functions
@@ -114,7 +121,11 @@ export default class MusicCreateCanvas extends React.Component{
         return this.setState({soundVolume: e.target.value})}
 
     onSaveProject = () =>{
-        this.setState({showSubmitModal: true}) 
+        if(this.state.projectEdit){
+            this.setState({showEditModal: true}) 
+        }else{
+            this.setState({showSubmitModal: true}) 
+        }
     }
 
     onProjectSave = (name, desc) =>{
@@ -126,6 +137,18 @@ export default class MusicCreateCanvas extends React.Component{
             rect.width = canvas.width/(tempo/2)  
         }
         return this.props.newProjectFetch(name, "", desc, canvas.width, canvas.height, this.state.notes.length, this.state.tempo, rectList)
+    }
+
+    onProjectEditSave =(name, desc)=>{
+        this.state.rectangles.map(rect => this.onGridSnap(rect))
+        const canvas = this.MusicCanvas.current
+        const rectList = this.state.rectangles
+        for(const rect of rectList){
+            rect.width = canvas.width/(this.state.tempo/2)  
+        }
+        this.setState({showEditModal: false})
+        this.setState({projectEdit: []})
+        return this.props.editProjectFetch(name, desc, canvas.width, canvas.height, this.state.notes.length, this.state.tempo, rectList)
     }
 
     drawBpmBar = () =>{
@@ -225,7 +248,7 @@ export default class MusicCreateCanvas extends React.Component{
         })
     }
 
-    drawRectangle = (x,y,width, height) =>{
+    drawRectangle = (x,y) =>{
         const canvas = this.MusicCanvas.current
         const ctx = this.MusicCanvas.current.getContext('2d')
         ctx.fillStyle = `rgb(32,178,${y})`;
@@ -333,7 +356,7 @@ export default class MusicCreateCanvas extends React.Component{
 
     render (){
         return(
-        <div className={this.state.showSubmitModal ? "modal" : "good"}>
+        <div className={this.state.showSubmitModal ||this.state.showEditModal ? "modal" : "good"}>
         <h3>MusicCanvas</h3>
         <div>{totalFrametime}</div> 
             <div>
@@ -375,13 +398,22 @@ export default class MusicCreateCanvas extends React.Component{
                 <button  className={this.state.showSubmitModal ? "buttonHide" : "good"}
                     id="save" 
                     onClick={this.onSaveProject} 
-                    >save
+                    >{this.state.projectEdit ? "Save Edit": "Save"}
                 </button>
             <div>
                 <CanvasCreateSubmit 
                     show={this.state.showSubmitModal} 
                     rectangles={this.state.rectangles}
                     onProjectSave={this.onProjectSave}
+                    handleSubmitClose={this.handleSubmitClose}
+                    />
+            </div>
+            <div>
+                <CanvasEditSubmit 
+                    show={this.state.showEditModal} 
+                    rectangles={this.state.rectangles}
+                    projectEdit={this.state.projectEdit}
+                    onProjectEditSave={this.onProjectEditSave}
                     handleSubmitClose={this.handleSubmitClose}
                     />
             </div>

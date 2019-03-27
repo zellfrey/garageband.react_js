@@ -1,9 +1,10 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import UserProjectCard from './UserProjectCard'
 import PlayCanvasModal from './PlayCanvasModal'; 
 import '../PlayCanvasModal.css'
 
-export default class UserPage extends React.Component{
+class UserPage extends React.Component{
 
     constructor(props){
         super(props);
@@ -29,13 +30,13 @@ export default class UserPage extends React.Component{
                     project={proj} 
                     onHandleDeleteProject={this.props.onHandleDeleteProject}
                     onHandleViewProject={this.onHandleViewProject} 
+                    onHandleEditProject={this.onHandleEditProject}
                     />
             })
     }
 
     onHandleViewProject = (e) =>{
-        console.log(e.target.id)
-        const projID= parseInt(e.target.id)
+        const projID= parseInt(e.target.parentElement.id)
         const uniqProject = this.state.userProjects.find(proj =>{return proj.id === projID})
         console.log(uniqProject.rectangles)
         this.setState({
@@ -43,6 +44,14 @@ export default class UserPage extends React.Component{
             rectanglesShow:  uniqProject.rectangles
         })
         return this.setState({showCanvasModal: true})
+    }
+
+    onHandleEditProject = (e) =>{
+        console.log(e.target.parentElement.id)
+        const projID= parseInt(e.target.parentElement.id)
+        const uniqProject = this.state.userProjects.find(proj =>{return proj.id === projID})
+        
+        this.props.renderEditPage(projID, uniqProject)
     }
 
     onHandleCloseProject = ()=>{this.setState({showCanvasModal: false})}
@@ -69,3 +78,4 @@ export default class UserPage extends React.Component{
         )
     }
 }
+export default withRouter(UserPage);
