@@ -111,10 +111,8 @@ export default class MusicCreateCanvas extends React.Component{
 
     onRemove =() =>{
         if(!this.state.playPause && !this.state.showSubmitModal){
-            console.log(this.state.rectangles)
-            const rectList = this.state.rectangles.splice(-1)
-            this.setState({rectangles: rectList})
-            this.drawCanvas()
+            this.setState({rectangles: this.state.rectangles.slice(0, -1)})
+            requestAnimationFrame(this.drawCanvas)
         }
     }
 
@@ -288,8 +286,13 @@ export default class MusicCreateCanvas extends React.Component{
             this.drawCanvas()
         }
         else{
-            uniqRect.posX = xRightBound.xValue
-            this.drawCanvas()
+            // if(uniqRect.posX > xBoundaries[-1].xValue){
+            //     uniqRect.posX = xBoundaries[59].xValue
+            //     this.drawCanvas()
+            // }else{
+                uniqRect.posX = xRightBound.xValue
+                this.drawCanvas()
+            // }
         }
        
     }
