@@ -23,6 +23,8 @@ class App extends Component {
       users: [],
       searchInput: '',
       loggedUser: 2,
+      projectIdEdit: null,
+      projectEdit: []
     }
   }
 
@@ -49,6 +51,14 @@ class App extends Component {
     return uniqUser
   }
 
+  renderEditPage =(id, project) =>{
+    this.setState({
+      projectIdEdit: id,
+      projectEdit: project
+    })
+    this.props.history.push(`/edit/${id}`);
+  }
+
   //Server stuff
   componentWillMount(){
     fetch(notesURL).then(resp => resp.json()).then(octave => this.setState({notes: octave}))
@@ -71,16 +81,31 @@ class App extends Component {
       this.setState({projects: this.state.projects.concat(resp)})})
   }
 
+  editProjectFetch = (name, desc, w, h, aON, tempo, rectangles)=>{
+    console.log(name, desc,w, h, aON, tempo, rectangles )
+      //delete object.keyname;
+      const editedProject ={name: name, description: desc, width: w, height: h, tempo: tempo, amount_of_notes: aON}
+
+     return fetch(`http://localhost:3000/api/v1/projects/${this.state.projectEdit.id}`,{
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editedProject)
+        }).then(resp => resp.json())
+          .then( updatedProject => {
+            const updatedProjects = this.state.projects.map( p => p.id === updatedProject.id ? updatedProject : p)
+            this.setState({ projects: updatedProjects })
+            this.EditEachRectangle(rectangles,editedProject.id)
+        })
+    }
+
 
   onHandleDeleteProject = (e) =>{
-    const id = parseInt(e.target.id)
+    const id = parseInt(e.target.parentElement.id)
     const selectedProj = this.state.projects.find(proj =>proj.id === id)
-    debugger
     selectedProj.rectangles.map(rect => this.deleteRectangleFetch(rect.id))
     return fetch(`http://localhost:3000/api/v1/projects/${e.target.id}`,
       {method:'Delete'}).then(resp => resp.json())
       .then(resp => {
-        console.log(resp)
         this.setState({projects: this.state.projects.filter(proj => {return proj.id !== resp.id})})
     })
   }
@@ -105,14 +130,45 @@ class App extends Component {
       this.setState({rectangles: this.state.rectangles.concat(rect)})});
   }
 
+  EditEachRectangle= (rectangles, proj_id)=>{
+    for(const rect of rectangles){
+      rect.project_id = proj_id
+      this.EditRectangleFetch(rect);  
+    }
+    this.props.history.push('/');
+  }
+
+  EditRectangleFetch = (rect)=>{
+     const editedRect = {
+          project_id: rect.project_id, 
+          note_id: rect.note_id,
+          posX: rect.posX, 
+          posY: rect.posY, 
+          width: rect.width, 
+          height: rect.height
+        }
+        debugger
+     return fetch(`http://localhost:3000/api/v1/projects/${editedRect.id}`,{
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editedRect)
+        }).then(resp => resp.json())
+          .then( updatedRectangle => {
+            const updatedRectangles = this.state.rectangles.map( r => r.id === updatedRectangle.id ? updatedRectangle : r)
+            this.setState({ rectangles: updatedRectangles })
+        })
+    }
+
+
+
   deleteRectangleFetch = (rectID) =>{
     return fetch(`http://localhost:3000/api/v1/rectangles/${rectID}`,
       {method:'Delete'}).then(resp => resp.json())
   }
 
- 
+ //Like CRUD server fetch requests
   onHandleLikeProject = (e) =>{
-    const likeOBJ = {admirer_id: 4, project_id: parseInt(e.target.id)}
+    const likeOBJ = {admirer_id: 4, project_id: parseInt(e.target.parentElement.id)}
     const project = this.state.projects.find(proj => {return proj.id === likeOBJ.project_id })
     const liked = project.likes.find(like =>{return like.admirer_id === likeOBJ.admirer_id})
     
@@ -141,9 +197,9 @@ class App extends Component {
           <Route exact path="/" component={Home} />
           <Route exact path="/create"  render={
             routerProps => <MusicCreateCanvas {...routerProps} 
+            editProjectFetch={this.editProjectFetch}
             notes={this.state.notes} 
             newProjectFetch={this.newProjectFetch}
-            createEachRectangle={this.createEachRectangle}
               />
             }/>
           <Route exact path="/collection" render={
@@ -160,7 +216,16 @@ class App extends Component {
               projects={this.state.projects}
               notes={this.state.notes}
               onHandleDeleteProject={this.onHandleDeleteProject}
+              renderEditPage={this.renderEditPage}
               /> 
+            }/>
+            <Route path={`/edit/${this.state.projectIdEdit}`}  render={
+            routerProps => <MusicCreateCanvas {...routerProps} 
+            notes={this.state.notes}
+            projectEdit={this.state.projectEdit}
+            newProjectFetch={this.newProjectFetch}
+            editProjectFetch={this.editProjectFetch}
+              />
             }/>
             <Route component={UnknownPage}/>
         </Switch>

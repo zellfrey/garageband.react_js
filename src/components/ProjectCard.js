@@ -8,8 +8,8 @@ const ProjectCard = (props) =>{
             <p>{props.description}</p>
             <p> Made by:{props.project.author.name}</p>
             <p> Likes:{props.project.likes.length}</p>
-            <button onClick={props.onHandleLikeProject} id={props.project.id}>Like</button>
-            <button onClick={props.onHandleViewProject} id={props.project.id}>View</button>
+            <button onClick={props.onHandleLikeProject}>Like</button>
+            <button onClick={props.onHandleViewProject}>View</button>
         </div>
     )
 }
