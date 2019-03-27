@@ -373,11 +373,11 @@ export default class MusicCreateCanvas extends React.Component{
                 {
                     !this.state.playPause ?
                     <div onClick={this.onPlay}>
-                    <img src={playButton} alt="play"></img>
+                    <img src={playButton} alt="play" width="32" height="32"></img>
                     </div>
                     :
                     <div onClick={this.onPause}>
-                    <img src={pauseButton} alt="pause"></img>
+                    <img src={pauseButton} alt="pause" width="32" height="32"></img>
                     </div>
                 }
                 <button 
