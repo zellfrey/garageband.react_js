@@ -34,15 +34,12 @@ export default class PlayCanvasModal extends React.Component{
         if(prevProps.projectShow !== this.props.projectShow && prevProps.rectanglesShow !== this.props.rectanglesShow){
             this.setState({
                 project: this.props.projectShow,
+                notes: this.props.notes,
                 rectangles: this.props.rectanglesShow,
                 stopBPM: false,
                 tempo: this.props.projectShow.tempo
-            }) 
-            this.drawCanvas()
-        }else if(prevProps.notes !== this.props.notes){
-            this.setState({
-                notes: this.props.notes
             })
+            requestAnimationFrame(this.drawCanvas)
         }
     }
     onChangeBPMSlider = (e) =>{
@@ -157,7 +154,7 @@ export default class PlayCanvasModal extends React.Component{
         let xIntersectArray = []
         ctx.beginPath()
         let noteID = 1
-            for(let i = 0; i < canvas.height; i+=(canvas.height/this.state.notes.length)){
+            for(let i = 0; i < canvas.height; i+=(canvas.height/16)){
                 yIntersectArray.push({yValue: i, note_id: noteID})
                 ctx.moveTo(0, i)
                 ctx.lineTo(canvas.width, i)
