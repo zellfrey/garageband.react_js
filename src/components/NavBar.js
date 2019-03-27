@@ -9,7 +9,7 @@ const NavBar = (props) =>{
         <NavLink className='item' to="/create" >Create</NavLink>
         <NavLink className='item' to="/collection" >Collection</NavLink>
         <div className="right menu">
-        <NavLink className='item' to={`/users/${props.loggedUser}`} >User</NavLink>
+        <div className='item'  onClick={props.renderUserPage} >User</div>
     </div>
     </div>
     );

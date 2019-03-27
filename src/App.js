@@ -22,7 +22,7 @@ class App extends Component {
       rectangles: [],
       users: [],
       searchInput: '',
-      loggedUser: 2,
+      loggedUser: null,
       projectIdEdit: null,
       projectEdit: []
     }
@@ -59,6 +59,14 @@ class App extends Component {
     this.props.history.push(`/edit/${id}`);
   }
 
+  renderUserPage =() =>{
+    console.log("user page")
+    this.setState({
+      loggedUser: 2
+    })
+    this.props.history.push(`/users/${this.state.loggedUser}`);
+  }
+
   //Server stuff
   componentWillMount(){
     fetch(notesURL).then(resp => resp.json()).then(octave => this.setState({notes: octave}))
@@ -78,7 +86,8 @@ class App extends Component {
     }).then(resp => resp.json())
     .then(resp => {
       this.createEachRectangle(rectangles,resp.id)
-      this.setState({projects: this.state.projects.concat(resp)})})
+      this.setState({projects: this.state.projects.concat(resp)})
+      console.log(resp)})
   }
 
   editProjectFetch = (name, desc, w, h, aON, tempo, rectangles)=>{
@@ -94,7 +103,7 @@ class App extends Component {
           .then( updatedProject => {
             const updatedProjects = this.state.projects.map( p => p.id === updatedProject.id ? updatedProject : p)
             this.setState({ projects: updatedProjects })
-            this.EditEachRectangle(rectangles,editedProject.id)
+            this.EditEachRectangle(rectangles, updatedProject.id)
         })
     }
 
@@ -132,14 +141,21 @@ class App extends Component {
 
   EditEachRectangle= (rectangles, proj_id)=>{
     for(const rect of rectangles){
-      rect.project_id = proj_id
-      this.EditRectangleFetch(rect);  
-    }
-    this.props.history.push('/');
+      if(rect.id === undefined){
+        rect.project_id = proj_id
+        this.newRectangleFetch(rect);
+        console.log("new rectangle")
+      }else{
+        console.log("edited rectangle")
+        this.EditRectangleFetch(rect);  
+        }
+      }
+    this.props.history.push('/');        
   }
 
   EditRectangleFetch = (rect)=>{
      const editedRect = {
+          id: rect.id,
           project_id: rect.project_id, 
           note_id: rect.note_id,
           posX: rect.posX, 
@@ -147,16 +163,15 @@ class App extends Component {
           width: rect.width, 
           height: rect.height
         }
-        debugger
-     return fetch(`http://localhost:3000/api/v1/projects/${editedRect.id}`,{
+     return fetch(`http://localhost:3000/api/v1/rectangles/${rect.id}`,{
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editedRect)
         }).then(resp => resp.json())
-          .then( updatedRectangle => {
-            const updatedRectangles = this.state.rectangles.map( r => r.id === updatedRectangle.id ? updatedRectangle : r)
-            this.setState({ rectangles: updatedRectangles })
-        })
+          // .then( updatedRectangle => {
+          //   const updatedRectangles = this.state.rectangles.map( r => r.id === updatedRectangle.id ? updatedRectangle : r)
+          //   this.setState({ rectangles: updatedRectangles })
+        //})
     }
 
 
@@ -192,7 +207,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <NavBar loggedUser={this.state.loggedUser}/>
+        <NavBar renderUserPage={this.renderUserPage}/>
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/create"  render={
@@ -210,7 +225,7 @@ class App extends Component {
             onHandleLikeProject={this.onHandleLikeProject}
               />
             } />
-            <Route exact path={`/users/${this.state.loggedUser}`} render={ 
+            <Route path={`/users/${this.state.loggedUser}`} render={ 
               routerProps => <Users {...routerProps} 
               filterSignedUser={this.filterSignedUser()} 
               projects={this.state.projects}

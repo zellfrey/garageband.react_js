@@ -229,11 +229,11 @@ export default class PlayCanvasModal extends React.Component{
                 {
                     !this.state.playPause ?
                     <div onClick={this.onPlay}>
-                    <img src={playButton} alt="play"></img>
+                    <img src={playButton} alt="play" width="32" height="32"></img>
                     </div>
                     :
-                    <div onClick={this.onPause}>
-                    <img src={pauseButton} alt="pause"></img>
+                    <div onClick={this.onPause} width="32" padding="32">
+                    <img src={pauseButton} alt="pause" width="32" height="32"></img>
                     </div>
                 }
                 <button 
