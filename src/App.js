@@ -200,13 +200,13 @@ class App extends Component {
     .then(addedLike => this.updateProjectLikes(addedLike))
   }
 
-  updateProjectLikes = (like) =>{
+  updateProjectLikes = (addlike) =>{
     const projects = this.state.projects
-    const uniqProject = projects.find(p => {return p.id === like.project_id})
+    const uniqProject = projects.find(p => {return p.id === addlike.project_id})
     const updatedProjects= []
     for(const proj of projects){
         if(proj.id === uniqProject.id){
-            proj.likes.push(like)
+            proj.likes.push(addlike)
             updatedProjects.push(proj) 
         }else{
           updatedProjects.push(proj)  
@@ -217,7 +217,25 @@ class App extends Component {
 
   deleteLikeFetch = (likeID) =>{
     return fetch(`http://localhost:3000/api/v1/likes/${likeID}`,
-      {method:'Delete'}).then(resp => resp.json())
+      {method:'Delete'})
+      .then(resp => resp.json())
+      .then(deletedLike => this.updateDeleteProjectLikes(deletedLike))
+  }
+
+  updateDeleteProjectLikes = (deletelike) =>{
+    const projects = this.state.projects
+    const uniqProject = projects.find(p => {return p.id === deletelike.project_id})
+    const updatedProjects= []
+    for(const proj of projects){
+        if(proj.id === uniqProject.id){
+            let likesFilter = proj.likes.filter(like => {return like.id !== deletelike.id})
+            proj.likes = likesFilter
+            updatedProjects.push(proj) 
+        }else{
+          updatedProjects.push(proj)  
+        }
+    }
+    return this.setState({projects: updatedProjects})
   }
 
   render() {

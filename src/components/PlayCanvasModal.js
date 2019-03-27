@@ -83,6 +83,7 @@ export default class PlayCanvasModal extends React.Component{
 
     handleCanvasCleanUp = () =>{
         this.onStop()
+        this.drawCanvas()
         return this.props.onHandleCloseProject()
     }
 
