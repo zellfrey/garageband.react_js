@@ -7,11 +7,18 @@ import loopGreen from '../canvas_imgs/loop-green.png';
 import loopGrey from '../canvas_imgs/loop-grey.png';
 import stopGreen from '../canvas_imgs/music-stop-green.png';
 import stopGrey from '../canvas_imgs/music-stop-grey.png';
+import AddButton from '../canvas_imgs/music-add.png';
+import RemoveButton from '../canvas_imgs/music-remove.png';
+import SaveButton from '../canvas_imgs/music-save.png';
+import VolumePng from '../canvas_imgs/music-volume.png';
+import MetroPng from '../canvas_imgs/music-metronome.png';
 import '../CanvasSubmit.css'
+import '../musicCreate.css'
 
 const audioContext = new window.AudioContext()   
 var totalFrametime = 0
 var bpmBar={posX: 0, move: false}
+var newRectanglePosition = 50
 export default class MusicCreateCanvas extends React.Component{
 
     constructor(props){
@@ -104,18 +111,21 @@ export default class MusicCreateCanvas extends React.Component{
             this.setState({playPause: false})
         }
     }
-    setLoop = () =>{
-        this.setState({loop: true})
-        console.log(this.state.loop)
-    }
+    setLoop = () =>{this.setState({loop: !this.state.loop})}
 
     onAdd = () =>{
         if(!this.state.playPause && !this.state.showSubmitModal){
             const canvas = this.MusicCanvas.current
-            const newRectangle ={posX: 200, posY: 100, width: (canvas.width/(this.state.tempo/2)), height: (canvas.height/16)}
+            const newRectangle ={posX: newRectanglePosition, posY: 100, width: (canvas.width/(this.state.tempo/2)), height: (canvas.height/16)}
             const rectList = this.state.rectangles.concat(newRectangle)
             this.setState({rectangles: rectList})
             this.drawRectangle(newRectangle.posX, newRectangle.posY, newRectangle.width, newRectangle.height)
+            if(newRectanglePosition+200 > canvas.width){
+                newRectanglePosition = 100
+            }else{
+                newRectanglePosition += 50
+
+            }
         }
     }
 
@@ -382,59 +392,47 @@ export default class MusicCreateCanvas extends React.Component{
     render (){
         return(
         <div className={this.state.showSubmitModal ||this.state.showEditModal ? "modal" : "good"}>
-        <h3>MusicCanvas</h3>
         <div>{totalFrametime}</div> 
             <div>
-                <canvas ref={this.MusicCanvas} id="music" width="1200" height="400"  style ={{background: '#303942'}}
+                <canvas ref={this.MusicCanvas} className="createCanvas" width="1200" height="400"  style ={{background: '#303942'}}
                 onMouseDown={this.dragRectangleStart} onMouseMove={this.dragRectangle} onMouseUp={this.dragRectangleEnd} ></canvas>
             </div>
                 <input className={this.state.showSubmitModal ? "buttonHide" : "good"} 
-                    type="range" id="tempo range" min="25" max="220" 
+                    type="range" id="tempoCreate" min="25" max="220" 
                     value={this.state.tempo} 
                     onChange={this.onChangeBPMSlider}>
                 </input>
                 <div>
                     {
                         !this.state.playPause ?
-                        <img src={playButton} alt="play" width="32" height="32" onClick={this.onPlay}></img>
+                        <img src={playButton} alt="play" id='playCreate' width="32" height="32" onClick={this.onPlay}></img>
                         :
-                        <img src={pauseButton} alt="pause" width="32" height="32" onClick={this.onPause}></img>
+                        <img src={pauseButton} alt="pause" id='playCreate' width="32" height="32" onClick={this.onPause}></img>
                     }
                     {
                         !this.state.playPause ?
-                        <img src={stopGrey} alt="stopGrey" width="32" height="32" onClick={this.onStop}></img>
+                        <img src={stopGrey} alt="stopGrey" id='stopCreate' width="32" height="32" onClick={this.onStop}></img>
                         :
-                        <img src={stopGreen} alt="stopGreen" width="32" height="32" onClick={this.onStop}></img>
+                        <img src={stopGreen} alt="stopGreen" id='stopCreate' width="32" height="32" onClick={this.onStop}></img>
                     }
                     {
                         this.state.loop ? 
-                        <img src={loopGreen} alt="play" width="32" height="32" onClick={this.setLoop}></img>
+                        <img src={loopGreen} alt="play" id='loopCreate' width="32" height="32" onClick={this.setLoop}></img>
                         :
-                        <img src={loopGrey} alt="pause" width="32" height="32" onClick={this.setLoop}></img>
+                        <img src={loopGrey} alt="pause" id='loopCreate' width="32" height="32" onClick={this.setLoop}></img>
                     }
+                    <img src={AddButton} alt="add" id='addCreate' width="32" height="32" onClick={this.onAdd}></img>
+                    <img src={RemoveButton} alt="remove" id='removeCreate' width="32" height="32" onClick={this.onRemove}></img>
+                    <img src={SaveButton} alt="save" id='saveCreate' width="32" height="32" onClick={this.onSaveProject}></img>
                 </div>
-                <button  className={this.state.showSubmitModal ? "buttonHide" : "good"}
-                    id="add" 
-                    onClick={this.onAdd} 
-                    >add
-                </button>
-                <button  className={this.state.showSubmitModal ? "buttonHide" : "good"}
-                    id="remove" 
-                    onClick={this.onRemove} 
-                    >remove
-                </button>
                 <input  className={this.state.showSubmitModal ? "buttonHide" : "good"}
                     type="range" 
-                    id="volume" min="0.0" max="1.0" step="0.01" 
+                    id='volumeCreate' min="0.0" max="1.0" step="0.01" 
                     value={this.state.soundVolume} 
                     onChange={this.onChangeVolumeSlider}>
                 </input>
-                <button  className={this.state.showSubmitModal ? "buttonHide" : "good"}
-                    id="save" 
-                    onClick={this.onSaveProject} 
-                    >{this.state.projectEdit ? "Save Edit": "Save"}
-                </button>
-                
+                    <img src={VolumePng} alt="volumeImg" id='volumeImg' width="32" height="32"></img>
+                    <img src={MetroPng} alt="metroImg" id='metronome' width="32" height="32"></img>
             <div>
                 <CanvasCreateSubmit 
                     show={this.state.showSubmitModal} 

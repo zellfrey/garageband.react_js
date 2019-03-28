@@ -1,5 +1,5 @@
 .modal {
-    position: fixed;
+    position: absolute;
     z-index: 0;
     padding-top: 100px;
     left: 0;
@@ -12,7 +12,7 @@
   }
   
 .canvasPlay-modal-content {
-  position: absolute;
+  position: fixed;
   z-index: 1;
   left: 25%;
   top: 20%;
@@ -55,24 +55,30 @@
 #loop{
   position: fixed;
   left: 48%;
-  top: 70%;
+  top: 68%;
 }
 
 #play{
   position: fixed;
   left: 50%;
-  top: 70%;
+  top: 68%;
 }
 #stop{
   position: fixed;
   left: 52%;
-  top: 70%;
+  top: 68%;
 }
 
 #volume{
   position: fixed;
   left: 48%;
-  top: 78%;
+  top: 74%;
+}
+
+#volumeImg{
+  position: fixed;
+  left: 50%;
+  top: 76%;
 }
 /* #closeCanvasButton{
   position: fixed;

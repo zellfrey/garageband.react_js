@@ -1,12 +1,13 @@
 import React from 'react';
 import viewButton from '../canvas_imgs/view-canvas.png'
 import likeGreyButton from '../canvas_imgs/like-grey.png'
+import placeholderImg from '../canvas_imgs/placeholder_img.jpg'
 
 const ProjectCard = (props) =>{
     return (
         <div className='projectCard' id={props.project.id}>
             <h2>{props.project.name}</h2>
-            <img src={props.project.image} alt={props.project.id} width="500" height="600"></img>
+            <img src={placeholderImg} alt={props.project.id} width="180" height="140"></img>
             <p> Made by:{props.project.author.name}</p>
             <p> Likes:{props.project.likes.length}</p>
             <p>{props.project.description}</p>

@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import UserProjectCard from './UserProjectCard'
 import PlayCanvasModal from './PlayCanvasModal'; 
 import '../PlayCanvasModal.css'
+import userplaceholderImg from '../canvas_imgs/user-placeholder.jpg'
 
 class UserPage extends React.Component{
 
@@ -62,7 +63,7 @@ class UserPage extends React.Component{
             <div>
                 <h3>{this.props.user.name}</h3>
                 <h3>{this.props.user.email}</h3>
-                <img src={this.props.user.profile} alt="oopsie whoopsie"width="200" height="200"></img>
+                <img src={userplaceholderImg} alt="oopsie whoopsie"width="200" height="150"></img>
                 {this.renderProjectCard()}
             </div>
             <PlayCanvasModal 

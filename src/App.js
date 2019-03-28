@@ -124,7 +124,7 @@ class App extends Component {
       rect.project_id = proj_id
       this.newRectangleFetch(rect);  
     }
-    this.props.history.push('/');
+    this.props.history.push('/collection');
   }
   newRectangleFetch = (rectangle)=>{
     return fetch(rectanglesURL,{
@@ -148,7 +148,7 @@ class App extends Component {
         this.EditRectangleFetch(rect);  
         }
       }
-    this.props.history.push('/');        
+    this.props.history.push('/collection');        
   }
 
   EditRectangleFetch = (rect)=>{
@@ -181,7 +181,7 @@ class App extends Component {
 
  //Like CRUD server fetch requests
   onHandleLikeProject = (e) =>{
-    const likeOBJ = {admirer_id: 4, project_id: parseInt(e.target.parentElement.id)}
+    const likeOBJ = {admirer_id: this.state.loggedUser, project_id: parseInt(e.target.parentElement.id)}
     const project = this.state.projects.find(proj => {return proj.id === likeOBJ.project_id })
     const liked = project.likes.find(like =>{return like.admirer_id === likeOBJ.admirer_id})
     
