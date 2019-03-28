@@ -1,8 +1,12 @@
 import React from 'react';
 import CanvasCreateSubmit from './CanvasCreateSubmit';
 import CanvasEditSubmit from './CanvasEditSubmit';
-import playButton from '../canvas_imgs/music-player-play.png';
-import pauseButton from '../canvas_imgs/music-player-pause-lines.png';
+import playButton from '../canvas_imgs/music-play.png';
+import pauseButton from '../canvas_imgs/music-pause.png';
+import loopGreen from '../canvas_imgs/loop-green.png';
+import loopGrey from '../canvas_imgs/loop-grey.png';
+import stopGreen from '../canvas_imgs/music-stop-green.png';
+import stopGrey from '../canvas_imgs/music-stop-grey.png';
 import '../CanvasSubmit.css'
 
 const audioContext = new window.AudioContext()   
@@ -163,7 +167,7 @@ export default class MusicCreateCanvas extends React.Component{
         ctx.beginPath()
         ctx.moveTo(bpmBar.posX, 0)
         ctx.lineTo(bpmBar.posX, canvas.height)
-        ctx.strokeStyle = '#aacaca' 
+        ctx.strokeStyle = '#00A572' 
         ctx.stroke()
     }
     
@@ -302,8 +306,8 @@ export default class MusicCreateCanvas extends React.Component{
             this.drawCanvas()
         }
         else{
-            // if(uniqRect.posX > xBoundaries[-1].xValue){
-            //     uniqRect.posX = xBoundaries[59].xValue
+            // if(uniqRect.posX > xBoundList[xBoundList.length - 1].xValue){
+            //     uniqRect.posX = xBoundList[xBoundList.length - 2].xValue
             //     this.drawCanvas()
             // }else{
                 uniqRect.posX = xRightBound.xValue
@@ -389,21 +393,26 @@ export default class MusicCreateCanvas extends React.Component{
                     value={this.state.tempo} 
                     onChange={this.onChangeBPMSlider}>
                 </input>
-                {
-                    !this.state.playPause ?
-                    <div onClick={this.onPlay}>
-                    <img src={playButton} alt="play" width="32" height="32"></img>
-                    </div>
-                    :
-                    <div onClick={this.onPause}>
-                    <img src={pauseButton} alt="pause" width="32" height="32"></img>
-                    </div>
-                }
-                <button 
-                    id="stop" 
-                    onClick={this.onStop} 
-                    >stop
-                </button>
+                <div>
+                    {
+                        !this.state.playPause ?
+                        <img src={playButton} alt="play" width="32" height="32" onClick={this.onPlay}></img>
+                        :
+                        <img src={pauseButton} alt="pause" width="32" height="32" onClick={this.onPause}></img>
+                    }
+                    {
+                        !this.state.playPause ?
+                        <img src={stopGrey} alt="stopGrey" width="32" height="32" onClick={this.onStop}></img>
+                        :
+                        <img src={stopGreen} alt="stopGreen" width="32" height="32" onClick={this.onStop}></img>
+                    }
+                    {
+                        this.state.loop ? 
+                        <img src={loopGreen} alt="play" width="32" height="32" onClick={this.setLoop}></img>
+                        :
+                        <img src={loopGrey} alt="pause" width="32" height="32" onClick={this.setLoop}></img>
+                    }
+                </div>
                 <button  className={this.state.showSubmitModal ? "buttonHide" : "good"}
                     id="add" 
                     onClick={this.onAdd} 
@@ -425,11 +434,7 @@ export default class MusicCreateCanvas extends React.Component{
                     onClick={this.onSaveProject} 
                     >{this.state.projectEdit ? "Save Edit": "Save"}
                 </button>
-                <button  className={this.state.showSubmitModal ? "buttonHide" : "good"}
-                    id="loop" 
-                    onClick={this.setLoop} 
-                    >{this.state.loop ? "fix" : "loop"}
-                </button>
+                
             <div>
                 <CanvasCreateSubmit 
                     show={this.state.showSubmitModal} 

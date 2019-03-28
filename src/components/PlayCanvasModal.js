@@ -1,7 +1,12 @@
 import React from 'react';
 import '../PlayCanvasModal.css'
-import playButton from '../canvas_imgs/music-player-play.png';
-import pauseButton from '../canvas_imgs/music-player-pause-lines.png';
+import playButton from '../canvas_imgs/music-play.png';
+import pauseButton from '../canvas_imgs/music-pause.png';
+import loopGreen from '../canvas_imgs/loop-green.png';
+import loopGrey from '../canvas_imgs/loop-grey.png';
+import stopGreen from '../canvas_imgs/music-stop-green.png';
+import stopGrey from '../canvas_imgs/music-stop-grey.png';
+import closeCanvas from '../canvas_imgs/close-canvas.png';
 
 
 const audioContext = new window.AudioContext()
@@ -84,12 +89,11 @@ export default class PlayCanvasModal extends React.Component{
     }
 
     setLoop = () =>{
-        this.setState({loop: true})
+        this.setState({loop: !this.state.loop})
         console.log(this.state.loop)
     }
 
     onChangeVolumeSlider = (e) =>{
-        console.log(e.target.value)
         return this.setState({soundVolume: e.target.value})
     }
 
@@ -105,7 +109,7 @@ export default class PlayCanvasModal extends React.Component{
         ctx.beginPath()
         ctx.moveTo(bpmBar.posX, 0)
         ctx.lineTo(bpmBar.posX, canvas.height)
-        ctx.strokeStyle = '#aacaca' 
+        ctx.strokeStyle = '#00A572' 
         ctx.stroke()
     }
     
@@ -243,39 +247,36 @@ export default class PlayCanvasModal extends React.Component{
         return (this.props.showCanvas ?
             <div className='canvasPlay-modal-content '>
             <h3 style={{textAlign: 'center'}}>{this.state.project.name}</h3>
-            <div>
-                <canvas ref={this.MusicCanvas} id="music" width="1200" height="400"  style ={{background: '#303942'}}></canvas>
+            <img src={closeCanvas} alt="closeCanvas" id="closeCanvasButton" width="32" height="32" onClick={this.handleCanvasCleanUp}></img>
+            <div className="canvasModalView">
+                <canvas  className='rcorners2' ref={this.MusicCanvas} id="music" width="1200" height="400"  style ={{background: '#303942'}}></canvas>
             </div>
+            <div>
+                    {
+                    !this.state.playPause ?
+                    <img src={playButton} alt="play" id="play" width="32" height="32" onClick={this.onPlay}></img>
+                    :
+                    <img src={pauseButton} alt="pause" id="play" width="32" height="32" onClick={this.onPause}></img>
+                }
                 {
                     !this.state.playPause ?
-                    <div onClick={this.onPlay}>
-                    <img src={playButton} alt="play" width="32" height="32"></img>
-                    </div>
+                    <img src={stopGrey} alt="stopGrey" id="stop" width="32" height="32" onClick={this.onStop}></img>
                     :
-                    <div onClick={this.onPause} width="32" padding="32">
-                    <img src={pauseButton} alt="pause" width="32" height="32"></img>
-                    </div>
+                    <img src={stopGreen} alt="stopGreen" id="stop" width="32" height="32" onClick={this.onStop}></img>
                 }
-                <button 
-                    id="stop" 
-                    onClick={this.onStop} 
-                    >stop
-                </button>
+                {
+                    this.state.loop ? 
+                    <img src={loopGreen} alt="loopGreen" id="loop" width="32" height="32" onClick={this.setLoop}></img>
+                    :
+                    <img src={loopGrey} alt="loopGrey" id="loop" width="32" height="32" onClick={this.setLoop}></img> 
+                }
                 <input type="range" 
                     id="volume" min="0.0" max="1.0" step="0.01" 
                     value={this.state.soundVolume} 
                     onChange={this.onChangeVolumeSlider}>
                 </input>
-                <button
-                    id="loop" 
-                    onClick={this.setLoop} 
-                    >{this.state.loop ? "fix" : "loop"}
-                </button>
-                <button 
-                    id="close" 
-                    onClick={this.handleCanvasCleanUp} 
-                    >close
-                </button>
+                </div>
+                <p>{this.state.project.description}</p>
             </div> : null
         )
     }

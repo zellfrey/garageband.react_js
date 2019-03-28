@@ -1,0 +1,31 @@
+.projectListContainer {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: space-around;
+    margin: 20px;
+    top: 20%;
+    /* left:; */
+  }
+  .projectCard {
+    order: 0; /* default is 0 */
+    /* background: tomato; */
+    text-align: center;
+    width: 300px;
+    /* width: 300px; */
+    height: 300px;
+    margin: 40px;
+    background-color: rgb(26, 26, 44);
+    box-shadow: 0 0px 20px rgb(82, 83, 82);
+    border: 3px solid #505050;
+    border-radius: 5px;
+  }
+
+.searchOptions{
+    position: fixed;
+    /* align: center; */
+    width: 100%;
+    margin: 20px;
+}

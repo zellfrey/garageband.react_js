@@ -61,9 +61,6 @@ class App extends Component {
 
   renderUserPage =() =>{
     console.log("user page")
-    this.setState({
-      loggedUser: 2
-    })
     this.props.history.push(`/users/${this.state.loggedUser}`);
   }
 
@@ -73,6 +70,7 @@ class App extends Component {
     fetch(projectsURL).then(resp => resp.json()).then(proj => this.setState({projects: proj}))
     fetch(rectanglesURL).then(resp => resp.json()).then(rect => this.setState({rectangles: rect}))
     fetch(usersURL).then(resp => resp.json()).then(people => this.setState({users: people}))
+    this.setState({loggedUser: 2})
   }
 
   //Project CRUD server fetch requests

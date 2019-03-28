@@ -1,6 +1,6 @@
 .modal {
     position: fixed;
-    z-index: 1;
+    z-index: 0;
     padding-top: 100px;
     left: 0;
     top: 0;
@@ -11,15 +11,71 @@
     background-color: rgba(0,0,0,0.4);
   }
   
-  .canvasPlay-modal-content {
-    position: fixed;
-    z-index: 1;
-    left: 10%;
-    top: 20%;
-    background-color: #fefefe;
+.canvasPlay-modal-content {
+  position: absolute;
+  z-index: 1;
+  left: 25%;
+  top: 20%;
+    background-color: rgb(35, 37, 35);
     margin: auto;
     padding: 20px;
-    border: 1px solid #888;
-    width: 1400px;
+    border: 2px solid rgb(40, 47, 40);
+    border-radius: 3px;
+    box-shadow: 0 0px 20px rgb(55, 62, 55);
+    width: 1300px;
     height: 600px;
+    color: rgb(207, 206, 206);
   }
+.rcorners2 {
+  border-radius: 5px;
+  border: 3px solid #505050;
+  padding: 1px; 
+  width: 1200px;
+  height: 400px; 
+}
+
+.canvasModalView{
+  position: fixed;
+  left: 26.5%;
+  top: 26%;
+}
+
+
+.cMButtons {
+  height: 32px;
+  width: 32px;
+  padding: 1px;
+  box-sizing: border-box;
+}
+#closeCanvasButton{
+  position: fixed;
+  left: 73.5%;
+  top: 21.5%;
+}
+#loop{
+  position: fixed;
+  left: 48%;
+  top: 70%;
+}
+
+#play{
+  position: fixed;
+  left: 50%;
+  top: 70%;
+}
+#stop{
+  position: fixed;
+  left: 52%;
+  top: 70%;
+}
+
+#volume{
+  position: fixed;
+  left: 48%;
+  top: 78%;
+}
+/* #closeCanvasButton{
+  position: fixed;
+  left: 74%;
+  top: 21.5%;
+} */

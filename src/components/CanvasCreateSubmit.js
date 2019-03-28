@@ -1,5 +1,5 @@
 import React from 'react';
-import '../CanvasSubmit.css'
+//import './CanvasSubmit.css'
 
 export default class CanvasCreateSubmit extends React.Component{
 
@@ -79,3 +79,5 @@ export default class CanvasCreateSubmit extends React.Component{
         )
     }
 }
+
+// filter: blur(5px);

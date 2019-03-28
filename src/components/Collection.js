@@ -3,6 +3,7 @@ import CollectionSearchBar from '../components/CollectionSearchBar'
 import ProjectCard from './ProjectCard';
 import PlayCanvasModal from './PlayCanvasModal'; 
 import '../PlayCanvasModal.css'
+import '../Collection.css'
 
 export default class Collection extends React.Component{
 
@@ -47,7 +48,6 @@ export default class Collection extends React.Component{
     onHandleViewProject = (e) =>{
         const projID= parseInt(e.target.parentElement.id)
         const uniqProject = this.props.projects.find(proj =>{return proj.id === projID})
-        console.log(uniqProject.rectangles)
         this.setState({
             projectShow: uniqProject,
             rectanglesShow:  uniqProject.rectangles
@@ -59,15 +59,18 @@ export default class Collection extends React.Component{
 
     render (){
         return(
-        <div className={this.state.showCanvasModal ? "modal" : "good"}>
-            Music creations
-            <CollectionSearchBar 
-                filterSelectOption={this.state.filterSelectOption} 
-                onFilterSelectChange={this.onFilterSelectChange} 
-                onFilterFormChange={this.props.onFilterFormChange}
+        <div>
+            <div className= 'searchOptions'>
+                <CollectionSearchBar 
+                    filterSelectOption={this.state.filterSelectOption} 
+                    onFilterSelectChange={this.onFilterSelectChange} 
+                    onFilterFormChange={this.props.onFilterFormChange}
                 />
-            <div className= 'CanvasList'>
+            </div>
+            <div className= 'projectListContainer'>
             {this.renderProjectCards()}
+            </div>
+            <div>
             <PlayCanvasModal 
                 showCanvas={this.state.showCanvasModal} 
                 notes={this.state.notes} 
