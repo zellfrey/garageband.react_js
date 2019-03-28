@@ -60,7 +60,7 @@ export default class Collection extends React.Component{
     render (){
         return(
         <div>
-            <div className= 'searchOptions'>
+            <div>
                 <CollectionSearchBar 
                     filterSelectOption={this.state.filterSelectOption} 
                     onFilterSelectChange={this.onFilterSelectChange} 

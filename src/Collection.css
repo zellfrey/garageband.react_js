@@ -6,16 +6,16 @@
     justify-content: center;
     align-content: space-around;
     margin: 20px;
-    top: 20%;
+    top: 40%;
     /* left:; */
   }
   .projectCard {
     order: 0; /* default is 0 */
     /* background: tomato; */
     text-align: center;
-    width: 300px;
+    width: 350px;
     /* width: 300px; */
-    height: 300px;
+    height: 350px;
     margin: 40px;
     background-color: rgb(26, 26, 44);
     box-shadow: 0 0px 20px rgb(82, 83, 82);
@@ -24,8 +24,11 @@
   }
 
 .searchOptions{
-    position: fixed;
+    position: absolute;
+    display: flex;
     /* align: center; */
     width: 100%;
+    top: 35%;
+    left:46.5%;
     margin: 20px;
 }

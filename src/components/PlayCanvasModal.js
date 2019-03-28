@@ -6,6 +6,7 @@ import loopGreen from '../canvas_imgs/loop-green.png';
 import loopGrey from '../canvas_imgs/loop-grey.png';
 import stopGreen from '../canvas_imgs/music-stop-green.png';
 import stopGrey from '../canvas_imgs/music-stop-grey.png';
+import VolumePng from '../canvas_imgs/music-volume.png';
 import closeCanvas from '../canvas_imgs/close-canvas.png';
 
 
@@ -88,10 +89,7 @@ export default class PlayCanvasModal extends React.Component{
         }
     }
 
-    setLoop = () =>{
-        this.setState({loop: !this.state.loop})
-        console.log(this.state.loop)
-    }
+    setLoop = () =>{this.setState({loop: !this.state.loop})}
 
     onChangeVolumeSlider = (e) =>{
         return this.setState({soundVolume: e.target.value})
@@ -275,8 +273,9 @@ export default class PlayCanvasModal extends React.Component{
                     value={this.state.soundVolume} 
                     onChange={this.onChangeVolumeSlider}>
                 </input>
+                    <img src={VolumePng} alt="volumePNG" id="volumeImg" width="32" height="32"></img>
                 </div>
-                <p>{this.state.project.description}</p>
+                {/* <p>{this.state.project.description}</p> */}
             </div> : null
         )
     }

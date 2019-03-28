@@ -1,0 +1,64 @@
+.createCanvas{
+    position: fixed;
+    border: 2px solid rgb(40, 47, 40);
+    border-radius: 3px;
+    box-shadow: 0 0px 20px rgb(55, 62, 55);
+    left:25%;
+    top:8%;
+}
+
+#saveCreate{
+    position: fixed;
+    left: 73%;
+    top: 29%; 
+}
+
+#loopCreate{
+    position: fixed;
+    left: 46%;
+    top: 52%;
+}
+  
+#playCreate{
+    position: fixed;
+    left: 48%;
+    top: 52%;
+}
+
+#stopCreate{
+    position: fixed;
+    left: 50%;
+    top: 52%;
+}
+  
+#volumeCreate{
+    position: fixed;
+    left: 58%;
+    top: 53%;
+  }
+
+#volumeImg{
+    position: fixed;
+    left: 60%;
+    top: 56%; 
+}
+#tempoCreate{
+    position: fixed;
+    left: 34%;
+    top: 53%;
+  }
+#metronome{
+    position: fixed;
+    left: 35.9%;
+    top: 56%;
+}
+#addCreate{
+    position: fixed;
+    left: 47%;
+    top: 58%;
+}
+#removeCreate{
+    position: fixed;
+    left: 49%;
+    top: 58%;
+}

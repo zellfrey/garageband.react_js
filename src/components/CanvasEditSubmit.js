@@ -1,5 +1,5 @@
 import React from 'react';
-import '../CanvasSubmit.css'
+import '../CanvasEdit.css'
 
 export default class CanvasEditSubmit extends React.Component{
 
