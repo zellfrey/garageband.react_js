@@ -17,6 +17,7 @@ import '../musicCreate.css'
 
 const audioContext = new window.AudioContext()   
 var totalFrametime = 0
+// jeez louise
 var bpmBar={posX: 0, move: false}
 var newRectanglePosition = 50
 export default class MusicCreateCanvas extends React.Component{
