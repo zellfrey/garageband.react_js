@@ -189,9 +189,9 @@ export default class MusicCreateCanvas extends React.Component{
         ctx.lineTo(bpmBar.posX+20, canvas.height)
         ctx.lineTo(bpmBar.posX+10, canvas.height)
         //
-        ctx.fillStyle = '#00A572'
+        ctx.fillStyle = '#c0c0c0'
         ctx.fill() 
-        ctx.strokeStyle = '#00A572' 
+        ctx.strokeStyle = '#c0c0c0' 
         ctx.stroke()
     }
     
@@ -284,7 +284,7 @@ export default class MusicCreateCanvas extends React.Component{
                 ctx.moveTo(i, 0)
                 ctx.lineTo(i ,canvas.height)
             }
-        ctx.strokeStyle = 'black' 
+        ctx.strokeStyle = 'rgba(0,0,0,0.6)' 
         ctx.stroke()
         return this.setState({
             gridYNoteBoundariesArray: yIntersectArray,
@@ -405,8 +405,8 @@ export default class MusicCreateCanvas extends React.Component{
 
     render (){
         return(
-        <div className={this.state.showSubmitModal ||this.state.showEditModal ? "modal" : "good"}>
-        <div>{totalFrametime}</div> 
+        <div className={this.state.showSubmitModal ||this.state.showEditModal ? "modal" : "canvasPlayParent"}>
+        {/* <div>{totalFrametime}</div>  */}
             <div>
                 <canvas ref={this.MusicCanvas} className="createCanvas" width="1200" height="400"  style ={{background: '#303942'}}
                 onMouseDown={this.dragRectangleStart} onMouseMove={this.dragRectangle} onMouseUp={this.dragRectangleEnd} ></canvas>
