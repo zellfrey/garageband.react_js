@@ -349,11 +349,12 @@ export default class MusicCreateCanvas extends React.Component{
        let clickedRect = this.state.rectangles.find(rect => {
             if((rect.posX < relativePosX && rect.posY < relativePosY) && 
                 (rect.posX+rect.width > relativePosX && rect.posY+rect.height > relativePosY)){ 
-                return rect
+                    return rect
                 }
             }
-        )
-        return this.setState({clickedRectangle: clickedRect})
+            )
+            console.log(e.pageX, e.pageY, relativePosX, relativePosY)
+            return this.setState({clickedRectangle: clickedRect})
     }
 
     dragRectangle = (e) =>{
@@ -406,17 +407,17 @@ export default class MusicCreateCanvas extends React.Component{
     render (){
         return(
         <div className={this.state.showSubmitModal ||this.state.showEditModal ? "modal" : "canvasPlayParent"}>
-        {/* <div>{totalFrametime}</div>  */}
+        <div>{totalFrametime}</div> 
             <div>
                 <canvas ref={this.MusicCanvas} className="createCanvas" width="1200" height="400"  style ={{background: '#303942'}}
                 onMouseDown={this.dragRectangleStart} onMouseMove={this.dragRectangle} onMouseUp={this.dragRectangleEnd} ></canvas>
             </div>
-                <input className={this.state.showSubmitModal ? "buttonHide" : "good"} 
+                <div className="createButtonCollection">
+                <input 
                     type="range" id="tempoCreate" min="25" max="220" 
                     value={this.state.tempo} 
                     onChange={this.onChangeBPMSlider}>
                 </input>
-                <div>
                     {
                         !this.state.playPause ?
                         <img src={playButton} alt="play" id='playCreate' width="32" height="32" onClick={this.onPlay}></img>
@@ -437,16 +438,16 @@ export default class MusicCreateCanvas extends React.Component{
                     }
                     <img src={AddButton} alt="add" id='addCreate' width="32" height="32" onClick={this.onAdd}></img>
                     <img src={RemoveButton} alt="remove" id='removeCreate' width="32" height="32" onClick={this.onRemove}></img>
-                    <img src={SaveButton} alt="save" id='saveCreate' width="32" height="32" onClick={this.onSaveProject}></img>
-                </div>
-                <input  className={this.state.showSubmitModal ? "buttonHide" : "good"}
-                    type="range" 
+                    
+                <input type="range" 
                     id='volumeCreate' min="0.0" max="1.0" step="0.01" 
                     value={this.state.soundVolume} 
                     onChange={this.onChangeVolumeSlider}>
                 </input>
-                    <img src={VolumePng} alt="volumeImg" id='volumeImg' width="32" height="32"></img>
+                    <img src={VolumePng} alt="volumeImg" id='volumeCreateImg' width="32" height="32"></img>
                     <img src={MetroPng} alt="metroImg" id='metronome' width="32" height="32"></img>
+                    <img src={SaveButton} alt="save" id='saveCreate' width="32" height="32" onClick={this.onSaveProject}></img>
+                </div>
             <div>
                 <CanvasCreateSubmit 
                     show={this.state.showSubmitModal} 

@@ -1,41 +1,73 @@
-.canvasPlayParent{
-    position: relative;
-}
+
 
 
 
 .createCanvas{
-    position: absolute;
+    position: relative;
     border: 2px solid rgb(40, 47, 40);
     border-radius: 3px;
     box-shadow: 0 0px 20px rgb(55, 62, 55);
-    left:50%;
-    top:8%;
+    left: 7%;
+    top:1%;
 }
 
-#saveCreate{ 
+.createButtonCollection{
+    position: absolute;
+    margin-top: 10px;
+    padding: 10px;
+    width: 1185px;
+    height: 150px;
+    left: 7%;
 }
-
+#tempoCreate{
+    position: absolute;
+    left:26%;
+    top: 11%;
+  }
+#metronome{
+    position: absolute;
+    left:30.1%;
+    top: 25%;
+    
+}
 #loopCreate{
+    position: absolute;
+    left:42%
 }
   
 #playCreate{
+    position: absolute;
+    left:48%
 }
 
 #stopCreate{
+    position: absolute;
+    left:54%
 }
   
 #volumeCreate{
+    position: absolute;
+    left:63%;
+    top: 11%;
   }
 
-#volumeImg{ 
+#volumeCreateImg{ 
+    position: absolute;
+    left:67.3%;
+    top: 25%;
 }
-#tempoCreate{
-  }
-#metronome{
-    
+
+#saveCreate{
+    position: absolute;
+    left:98%;
 }
 #addCreate{
+    position: absolute;
+    left:47.5%;
+    top: 50%;
 }
 #removeCreate{
+    position: absolute;
+    left:54%;
+    top: 50%;
 }
