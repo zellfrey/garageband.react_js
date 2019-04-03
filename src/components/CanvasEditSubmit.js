@@ -7,14 +7,20 @@ export default class CanvasEditSubmit extends React.Component{
         super(props);
         this.state={
             rectangles: [],
-            projectEditName: "",
-            projectEditDesc: "",
+            projectEditName: '',
+            projectEditDesc: '',
         }
     }
 
     componentDidUpdate(prevProps){
         if(prevProps.rectangles !== this.props.rectangles){
             this.setState({rectangles: this.props.rectangles})
+        }
+        if(prevProps.projectEdit !== this.props.projectEdit){
+            this.setState({
+                projectEditName: this.props.projectEdit.name,
+                projectEditDesc: this.props.projectEdit.description,
+            })
         }
     }
 

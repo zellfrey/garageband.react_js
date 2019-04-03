@@ -406,7 +406,7 @@ export default class MusicCreateCanvas extends React.Component{
 
     render (){
         return(
-        <div className={this.state.showSubmitModal ||this.state.showEditModal ? "modal" : "canvasPlayParent"}>
+        <div>
         <div>{totalFrametime}</div> 
             <div>
                 <canvas ref={this.MusicCanvas} className="createCanvas" width="1200" height="400"  style ={{background: '#303942'}}
