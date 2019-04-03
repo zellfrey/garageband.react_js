@@ -1,0 +1,45 @@
+
+.submit-modal-content {
+  position: fixed;
+  z-index: 1;
+  left: 39%;
+  top: 20%;
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  height: 350px;
+  width: 300px;
+}
+
+form{
+  position: absolute;
+  height: 310px;
+  width: 258px;
+}
+
+#canvasSubmitName{
+  position: relative;
+  left: 20%;
+  top: 0%;
+}
+
+#canvasSubmitDesc{
+  position: relative;
+  left: 18%;
+  top: 20%;
+}
+
+#canvasSubmitSave{
+  position: relative;
+  left: -25%;
+  top: 65%; 
+  background-color:'#50C878';
+}
+
+#canvasSubmitCancel{
+  position: relative;
+  left: 36%;
+  top: 70%;
+  
+}

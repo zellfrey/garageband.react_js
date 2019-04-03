@@ -1,5 +1,5 @@
 import React from 'react';
-import '../CanvasEdit.css'
+import '../CanvasSubmitModal.css'
 
 export default class CanvasEditSubmit extends React.Component{
 
@@ -7,20 +7,14 @@ export default class CanvasEditSubmit extends React.Component{
         super(props);
         this.state={
             rectangles: [],
-            projectEditName: '',
-            projectEditDesc: '',
+            projectEditName: this.props.projectEdit ? this.props.projectEdit.name : '',
+            projectEditDesc: this.props.projectEdit ? this.props.projectEdit.description : '',
         }
     }
 
     componentDidUpdate(prevProps){
         if(prevProps.rectangles !== this.props.rectangles){
             this.setState({rectangles: this.props.rectangles})
-        }
-        if(prevProps.projectEdit !== this.props.projectEdit){
-            this.setState({
-                projectEditName: this.props.projectEdit.name,
-                projectEditDesc: this.props.projectEdit.description,
-            })
         }
     }
 
@@ -51,24 +45,24 @@ export default class CanvasEditSubmit extends React.Component{
 
     handleCleanUp = () =>{
         this.setState({
-            projectEditName: "",
-            projectEditDesc: ""
+            projectEditName: this.props.projectEdit.name,
+            projectEditDesc: this.props.projectEdit.description,
         })
         return this.props.handleSubmitClose()
     }
 
     render(){
         return(this.props.show ?
-            <div className='edit-modal-content'>
+            <div className='submit-modal-content'>
                 <form onSubmit={this.handleProjectSubmit}>
-                    <input placeholder={this.props.projectEdit.name} type="text" 
+                    <input  id='canvasSubmitName' placeholder={this.props.projectEdit.name} type="text" 
                         value={this.state.projectEditName}
                         onChange={this.handleNameChange}/>
-                    <textarea placeholder={this.props.projectEdit.description} 
+                    <textarea  id='canvasSubmitDesc' placeholder={this.props.projectEdit.description} 
                         value={this.state.projectEditDesc} 
                         onChange={this.handleDescriptionChange}/>
-                    <input type="submit" value="Save Edit" />
-                <button onClick={this.handleCleanUp}>Cancel</button>
+                    <button id='canvasSubmitSave' type="submit" value="Save Edit" >Save</button>
+                <button id='canvasSubmitCancel' onClick={this.handleCleanUp}>Cancel</button>
                 </form>
             </div> : null
         )

@@ -12,7 +12,6 @@ import RemoveButton from '../canvas_imgs/music-remove.png';
 import SaveButton from '../canvas_imgs/music-save.png';
 import VolumePng from '../canvas_imgs/music-volume.png';
 import MetroPng from '../canvas_imgs/music-metronome.png';
-import '../CanvasSubmit.css'
 import '../musicCreate.css'
 
 const audioContext = new window.AudioContext()   
@@ -455,8 +454,6 @@ export default class MusicCreateCanvas extends React.Component{
                     onProjectSave={this.onProjectSave}
                     handleSubmitClose={this.handleSubmitClose}
                     />
-            </div>
-            <div>
                 <CanvasEditSubmit 
                     show={this.state.showEditModal} 
                     rectangles={this.state.rectangles}

@@ -1,5 +1,5 @@
 import React from 'react';
-//import './CanvasSubmit.css'
+import '../CanvasSubmitModal.css'
 
 export default class CanvasCreateSubmit extends React.Component{
 
@@ -65,15 +65,15 @@ export default class CanvasCreateSubmit extends React.Component{
     render(){
         return(this.props.show ?
             <div className='submit-modal-content'>
-                <form onSubmit={this.handleProjectSubmit}>
-                    <input placeholder="Project title" type="text" 
+                <form className="CanvasSubmitForm" onSubmit={this.handleProjectSubmit}>
+                    <input  id='canvasSubmitName' placeholder="Project title" type="text" 
                         value={this.state.projectName}
                         onChange={this.handleNameChange}/>
-                    <textarea placeholder="Project description"
+                    <textarea id='canvasSubmitDesc' placeholder="Project description"
                         value={this.state.projectDesc} 
                         onChange={this.handleDescriptionChange}/>
-                    <input type="submit" value="Save" />
-                <button onClick={this.handleCleanUp}>Cancel</button>
+                    <button   id='canvasSubmitSave' type="submit">Save</button>
+                <button id="canvasSubmitCancel" onClick={this.handleCleanUp}>Cancel</button>
                 </form>
             </div> : null
         )
