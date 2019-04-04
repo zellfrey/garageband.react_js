@@ -69,8 +69,6 @@ export default class Collection extends React.Component{
             </div>
             <div className= 'projectListContainer'>
             {this.renderProjectCards()}
-            </div>
-            <div>
             <PlayCanvasModal 
                 showCanvas={this.state.showCanvasModal} 
                 notes={this.state.notes} 

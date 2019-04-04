@@ -59,22 +59,21 @@ class UserPage extends React.Component{
 
     render (){
         return(
-        <div className={this.state.showCanvasModal ? "modal" : "good"}>
+        <div>
             <div>
                 <h3>{this.props.user.name}</h3>
                 <h3>{this.props.user.email}</h3>
                 <img src={userplaceholderImg} alt="oopsie whoopsie"width="200" height="150"></img>
-                {this.renderProjectCard()}
             </div>
-            <PlayCanvasModal 
+                {this.renderProjectCard()}
+
+                <PlayCanvasModal 
                 showCanvas={this.state.showCanvasModal} 
                 notes={this.state.notes} 
                 projectShow={this.state.projectShow} 
                 rectanglesShow={this.state.rectanglesShow}
                 onHandleCloseProject={this.onHandleCloseProject}
                 />
-            <div>
-            </div>
         </div>
         )
     }
