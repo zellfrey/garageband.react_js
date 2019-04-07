@@ -142,7 +142,7 @@ export default class PlayCanvasModal extends React.Component{
 
     onRectangleAndBPMCollision = (rect) => {
         if(rect.note_id != null){
-            if(bpmBar.posX >= rect.posX-3 && bpmBar.posX <= rect.posX + rect.width){ 
+            if(bpmBar.posX >= rect.posX && bpmBar.posX <= rect.posX + rect.width){ 
                 const note = this.state.notes.find(note =>note.id === rect.note_id)
                 this.playSound(note.freq, audioContext,rect.width)
                 rect.note_id = null       
@@ -245,7 +245,7 @@ export default class PlayCanvasModal extends React.Component{
         return (this.props.showCanvas ?
             <div className='canvasPlay-modal-content '>
             <img src={closeCanvas} alt="closeCanvas" id="closeCanvasButton" width="32" height="32" onClick={this.handleCanvasCleanUp}></img>
-            <h3 style={{textAlign: 'center', top: '10%', margin: '0px', paddingBottom: '0px'}}>{this.state.project.name}</h3>
+            <h3 style={{textAlign: 'center', top: '-5%', left: '10%', margin: '0px', padding: '0px', position: 'relative', width: '1000px'}}>{this.state.project.name}</h3>
             <div className="canvasModalView">
                 <canvas  className='rcorners2' ref={this.MusicCanvas} id="music" width="1200" height="400"  style ={{background: '#303942'}}></canvas>
             </div>
