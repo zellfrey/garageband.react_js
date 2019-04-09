@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  posX: MyString
+  posY: MyString
+  width: MyString
+  height: MyString
+  canvas_id: MyString
+  note_id: MyString
+
+two:
+  posX: MyString
+  posY: MyString
+  width: MyString
+  height: MyString
+  canvas_id: MyString
+  note_id: MyString
