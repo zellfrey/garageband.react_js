@@ -59,10 +59,10 @@ class App extends Component {
     this.props.history.push(`/edit/${id}`);
   }
 
-  renderUserPage =() =>{
-    console.log("user page")
-    this.props.history.push(`/users/${this.state.loggedUser}`);
-  }
+  // renderUserPage =() =>{
+  //   console.log("user page")
+  //   this.props.history.push(`/users/${this.state.loggedUser}`);
+  // }
 
   //Server stuff
   componentWillMount(){
@@ -239,7 +239,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <NavBar renderUserPage={this.renderUserPage}/>
+        <NavBar loggedUser={this.state.loggedUser}/>
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/create"  render={

@@ -1,0 +1,51 @@
+.Navbar{
+    height: 50px;
+    border-bottom: 1px solid #505050;
+    padding-left: 10px;
+    padding-right: 10px;
+    z-index: 1000;
+}
+#NavLeftItem{
+    position: relative;
+    background-color:#303942;
+    color: white;
+    height: 50px;
+    float: left;
+    vertical-align: middle;
+    font-size: 18px;
+    font-family: 'Lato', sans-serif;
+    line-height:50px;
+    text-decoration: none;
+    z-index: 1000;
+    -webkit-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+#NavLeftItem:hover {
+    background-color: #00a572;
+    color: white;
+}
+
+.NavBarUser{
+    position: relative;
+    background-color:#303942;
+    color: white;
+    height: 50px;
+    float: right;
+    vertical-align: middle;
+    font-size: 18px;
+    font-family: 'Lato', sans-serif;
+    line-height:50px;
+    text-decoration: none;
+    z-index: 1000;
+    -webkit-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.NavBarUser:hover {
+    background-color: #00a572;
+    color: white;
+}
