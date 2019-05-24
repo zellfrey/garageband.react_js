@@ -17,17 +17,20 @@ Ruby<br>
 
 ## Start-up instructions:
 
+###### backend;<br>
 To access the backend, go to the project directory:<br>
 `cd garageband_backend`<br>
 Then type:<br>
 `rails s`<br>
 This will start the rails server on port 3000. You can view the JSON data in your browser[http://localhost:3000]
 
-### `npm start`
 
-Runs the app in the development mode.<br>
-Open [http://localhost:4000](http://localhost:4000) to view it in the browser.
+###### frontend; <br>
+To access the frontend, go to the project directory:<br>
+Type `PORT=4000 npm start`(the port can be any number provided it is not the same port as the backend)<br>
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+You can view the web app at[http://localhost:4000](http://localhost:4000) in your browser.<br>
 
+## Demonstration Video
+
+Video here
