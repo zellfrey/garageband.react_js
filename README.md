@@ -15,9 +15,13 @@ Ruby<br>
 [PostgresSQL](https://www.postgresql.org/): Extends SQL language, SQL is utilized for backend data storage 
 
 
-## Available Scripts
+## Start-up instructions:
 
-In the project directory, you can run:
+To access the backend, go to the project directory:<br>
+`cd garageband_backend`
+Then type
+`rails s`
+This will start the rails server on port 3000. You can view the JSON data in your browser[http://localhost:3000]
 
 ### `npm start`
 
