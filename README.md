@@ -18,9 +18,9 @@ Ruby<br>
 ## Start-up instructions:
 
 To access the backend, go to the project directory:<br>
-`cd garageband_backend`
-Then type
-`rails s`
+`cd garageband_backend`<br>
+Then type:<br>
+`rails s`<br>
 This will start the rails server on port 3000. You can view the JSON data in your browser[http://localhost:3000]
 
 ### `npm start`
