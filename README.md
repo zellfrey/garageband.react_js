@@ -6,7 +6,7 @@ Flatiron School mod 5 & final project. This is a solo project that allows users 
 **Frontend**:<br>
 [React](https://github.com/facebook/create-react-app):Javascript library/framework for building UI)<br>
 [React Router](https://reacttraining.com/react-router/): Library of navigational components to assist with React<br>
-Javascript<br>
+Javascript, HTML & CSS<br>
 [Web Audio Api](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API): A powerful api handling audio operations<br>
 
 **Backend**:<br>
