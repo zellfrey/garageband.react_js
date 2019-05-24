@@ -1,7 +1,7 @@
 
 Flatiron School mod 5 & final project. This is a solo project that allows users to create, save & share synth music pieces.
 
-######Frontend:<br>
+###### Frontend:<br>
 [React](https://github.com/facebook/create-react-app):Javascript library/framework for building UI)<br>
 [React Router](https://reacttraining.com/react-router/): Library of navigational components to assist with React<br>
 Javascript<br>
