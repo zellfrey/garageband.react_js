@@ -89,7 +89,6 @@ export default class MusicCreateCanvas extends React.Component{
             this.drawBpmBar()
             this.playBpmBar(performance.now())
             this.setState({playPause: true})
-            console.log(this.state.rectangles)
             return (rectangles ? rectangles.map(rect => this.onGridSnap(rect)) : null)
         }
     }

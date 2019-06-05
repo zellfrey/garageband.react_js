@@ -83,9 +83,9 @@ class App extends Component {
       body: JSON.stringify(newProject)
     }).then(resp => resp.json())
     .then(resp => {
-      this.createEachRectangle(rectangles,resp.id)
       this.setState({projects: this.state.projects.concat(resp)})
-      console.log(resp)})
+      this.createEachRectangle(rectangles,resp.id)
+    })
   }
 
   editProjectFetch = (name, desc, w, h, aON, tempo, rectangles)=>{
@@ -119,11 +119,19 @@ class App extends Component {
 
   //Rectangle CRUD server fetch requests
 
-  createEachRectangle = (rectangles, proj_id)=>{
-    for(const rect of rectangles){
+  createEachRectangle = (rects, proj_id)=>{
+    console.log(rects)
+    for(const rect of rects){
       rect.project_id = proj_id
       this.newRectangleFetch(rect);  
     }
+    let projIndex =  this.state.projects.findIndex(p => p.id ===proj_id)
+    let projectsCopy = JSON.parse(JSON.stringify(this.state.projects))
+
+    projectsCopy[projIndex].rectangles = rects
+   this.setState({
+      projects:projectsCopy 
+    }) 
     this.props.history.push('/collection');
   }
   newRectangleFetch = (rectangle)=>{
@@ -131,8 +139,7 @@ class App extends Component {
       method:'Post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(rectangle)
-    }).then(resp => {
-      resp.json()})
+    }).then(resp => resp.json())
     .then(rect => {
       this.setState({rectangles: this.state.rectangles.concat(rect)})});
   }

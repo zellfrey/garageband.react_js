@@ -106,8 +106,21 @@ export default class PlayCanvasModal extends React.Component{
         const ctx = this.MusicCanvas.current.getContext('2d')
         ctx.beginPath()
         ctx.moveTo(bpmBar.posX, 0)
+        ctx.lineTo(bpmBar.posX+20,0)
+        ctx.lineTo(bpmBar.posX+10,12)
+        ctx.lineTo(bpmBar.posX, 0)
+        ///
+        ctx.moveTo(bpmBar.posX+10,0)
+        ///
+        ctx.lineTo(bpmBar.posX+10, canvas.height)
         ctx.lineTo(bpmBar.posX, canvas.height)
-        ctx.strokeStyle = '#00A572' 
+        ctx.lineTo(bpmBar.posX+10, canvas.height-12)
+        ctx.lineTo(bpmBar.posX+20, canvas.height)
+        ctx.lineTo(bpmBar.posX+10, canvas.height)
+        //
+        ctx.fillStyle = '#c0c0c0'
+        ctx.fill() 
+        ctx.strokeStyle = '#c0c0c0' 
         ctx.stroke()
     }
     

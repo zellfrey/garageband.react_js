@@ -48,6 +48,7 @@ export default class Collection extends React.Component{
     onHandleViewProject = (e) =>{
         const projID= parseInt(e.target.parentElement.id)
         const uniqProject = this.props.projects.find(proj =>{return proj.id === projID})
+        console.log(uniqProject)
         this.setState({
             projectShow: uniqProject,
             rectanglesShow:  uniqProject.rectangles
