@@ -11,6 +11,9 @@ export default class Home extends React.Component{
             <div>
             <img src={guitarGrey} alt="view" id="imgDisplay" width="50%" height="500"></img>
             </div>
+            <div className="IntroContainer">
+                
+            </div>
         </div>
         )
     }
